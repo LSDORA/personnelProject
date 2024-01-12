@@ -1,6 +1,8 @@
 package commandLine;
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
+import static commandLineMenus.rendering.examples.util.InOut.getInt;
+
 
 import commandLineMenus.ListOption;
 import commandLineMenus.Menu;

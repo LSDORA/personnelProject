@@ -1,7 +1,9 @@
 package commandLine;
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
+import static commandLineMenus.rendering.examples.util.InOut.getInt;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import commandLineMenus.List;
@@ -91,6 +93,11 @@ public class LigueConsole
 				(element) -> editerLigue(element)
 				);
 	}
+	public LocalDate getInt(String message) {
+		return null;
+	    
+	}
+
 	
 	private Option ajouterEmploye(final Ligue ligue)
 	{
@@ -99,7 +106,7 @@ public class LigueConsole
 				{
 					ligue.addEmploye(getString("nom : "), 
 						getString("prenom : "), getString("mail : "), 
-						getString("password : "));
+						getString("password : "), getInt("date arriver : "), getInt("date depart : "));
 				}
 		);
 	}

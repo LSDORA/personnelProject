@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
+import java.time.LocalDate;
 /**
  * Gestion du personnel. Un seul objet de cette classe existe.
  * Il n'est pas possible d'instancier directement cette classe, 
@@ -20,7 +20,7 @@ public class GestionPersonnel implements Serializable
 	private static final long serialVersionUID = -105283113987886425L;
 	private static GestionPersonnel gestionPersonnel = null;
 	private SortedSet<Ligue> ligues;
-	private Employe root = new Employe(this, null, "root", "", "", "");
+	private Employe root = new Employe(this, null, "root", "", "", "toor", LocalDate.now(), LocalDate.now());
 	public final static int SERIALIZATION = 1, JDBC = 2, 
 			TYPE_PASSERELLE = SERIALIZATION;  
 	private static Passerelle passerelle = TYPE_PASSERELLE == JDBC ? new jdbc.JDBC() : new serialisation.Serialization();	
