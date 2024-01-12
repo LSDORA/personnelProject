@@ -1,6 +1,10 @@
 package commandLine;
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 import static commandLineMenus.rendering.examples.util.InOut.getInt;
 
 
@@ -8,12 +12,13 @@ import commandLineMenus.ListOption;
 import commandLineMenus.Menu;
 import commandLineMenus.Option;
 import personnel.Employe;
+import personnel.InvalidDateFormatException;
 
 public class EmployeConsole 
 {
 	private Option afficher(final Employe employe)
 	{
-		return new Option("Afficher l'employé", "l", () -> {System.out.println(employe);});
+		return new Option("Afficher la date d'arriver de l'employé", "l", () -> {System.out.println(employe.getdatearrive());});
 	}
 
 	ListOption<Employe> editerEmploye()
@@ -29,6 +34,8 @@ public class EmployeConsole
 			menu.add(changerPrenom(employe));
 			menu.add(changerMail(employe));
 			menu.add(changerPassword(employe));
+			menu.add(changerDateArrive(employe));
+			menu.add(changerDateDepart(employe));
 			menu.addBack("q");
 			return menu;
 	}
@@ -44,7 +51,30 @@ public class EmployeConsole
 	{
 		return new Option("Changer le prénom", "p", () -> {employe.setPrenom(getString("Nouveau prénom : "));});
 	}
-	
+	private Option changerDateArrive(final Employe employe) {
+	    return new Option("Changer la date d'arrivée", "y", () -> {
+	        String nouvelleDateArriveeStr = getString("Nouvelle date d'arrivée (YYYY-MM-DD) : ");
+	        try {
+	            LocalDate nouvelleDateArrivee = LocalDate.parse(nouvelleDateArriveeStr);
+	            employe.setdatearrive(nouvelleDateArrivee);
+	        } catch (DateTimeParseException e) {
+	        	System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");
+	        }
+	    });
+	}
+
+	private Option changerDateDepart(final Employe employe) {
+	    return new Option("Changer la date de départ", "z", () -> {
+	        String nouvelleDateDepartStr = getString("Nouvelle date de départ (YYYY-MM-DD) : ");
+	        try {
+	            LocalDate nouvelleDateDepart = LocalDate.parse(nouvelleDateDepartStr);
+	            employe.setdatedepart(nouvelleDateDepart);
+	        } catch (DateTimeParseException e) {
+	        	System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");
+	        }
+	    });
+	}
+
 	private Option changerMail(final Employe employe)
 	{
 		return new Option("Changer le mail", "e", () -> {employe.setMail(getString("Nouveau mail : "));});

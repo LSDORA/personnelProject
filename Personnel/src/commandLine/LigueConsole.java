@@ -1,9 +1,10 @@
 package commandLine;
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
-import static commandLineMenus.rendering.examples.util.InOut.getInt;
+
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import commandLineMenus.List;
@@ -99,18 +100,27 @@ public class LigueConsole
 	}
 
 	
-	private Option ajouterEmploye(final Ligue ligue)
-	{
-		return new Option("ajouter un employé", "a",
-				() -> 
-				{
-					ligue.addEmploye(getString("nom : "), 
-						getString("prenom : "), getString("mail : "), 
-						getString("password : "), getInt("date arriver : "), getInt("date depart : "));
-				}
-		);
+	private Option ajouterEmploye(final Ligue ligue) {
+	    return new Option("ajouter un employé", "a", () -> {
+	        String nom = getString("nom : ");
+	        String prenom = getString("prenom : ");
+	        String mail = getString("mail : ");
+	        String password = getString("password : ");
+
+	        try {
+	            String dateArriveeStr = getString("date d'arrivée (YYYY-MM-DD) : ");
+	            LocalDate dateArrivee = LocalDate.parse(dateArriveeStr);
+
+	            String dateDepartStr = getString("date de départ (YYYY-MM-DD) : ");
+	            LocalDate dateDepart = LocalDate.parse(dateDepartStr);
+
+	            ligue.addEmploye(nom, prenom, mail, password, dateArrivee, dateDepart);
+	        } catch (DateTimeParseException e) {
+	        	  System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");
+	        }
+	    });
 	}
-	
+
 	private Menu gererEmployes(Ligue ligue)
 	{
 		Menu menu = new Menu("Gérer les employés de " + ligue.getNom(), "e");
