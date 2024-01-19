@@ -19,11 +19,11 @@ class testLigue
 		assertEquals("Fléchettes", ligue.getNom());
 	}
 
-	@Test
-	void addEmploye() throws SauvegardeImpossible
-	{
-		Ligue ligue = gestionPersonnel.addLigue("Fléchettes");
-		Employe employe = ligue.addEmploye("Bouchard", "Gérard", "g.bouchard@gmail.com", "azerty",LocalDate.now(),LocalDate.now()); 
-		assertEquals(employe, ligue.getEmployes().first());
-	}
+	  @Test
+	    void addEmploye() throws SauvegardeImpossible {
+	        Ligue ligue = gestionPersonnel.addLigue("Fléchettes");
+	        Employe employe = ligue.addEmploye("Bouchard", "Gérard", "g.bouchard@gmail.com", "azerty", LocalDate.parse("2024-02-19"), LocalDate.now());
+	        assertEquals(employe, ligue.getEmployes().first());
+	    }
+	    
 }

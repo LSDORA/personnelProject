@@ -12,7 +12,7 @@ import commandLineMenus.ListOption;
 import commandLineMenus.Menu;
 import commandLineMenus.Option;
 import personnel.Employe;
-import personnel.InvalidDateFormatException;
+
 
 public class EmployeConsole 
 {

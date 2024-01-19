@@ -157,6 +157,12 @@ public class Employe implements Serializable, Comparable<Employe>
 	}
 	
 	public void setdatearrive(LocalDate date_arrive) {
+		if (date_depart != null && date_arrive != null && date_arrive.isEqual(date_depart)) {
+            throw new IllegalArgumentException("La date d'arrivée doit être differente de la date de départ.");
+        }
+		 if (date_depart != null && date_arrive != null && date_arrive.isBefore(date_depart)) {
+	            throw new IllegalArgumentException("La date d'arrivée doit être postérieure à la date de départ.");
+	        }
 		this.date_arrive= date_arrive;
 	}
 	
