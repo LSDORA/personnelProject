@@ -19,7 +19,7 @@ public class Employe implements Serializable, Comparable<Employe>
 	private LocalDate date_arrive;
     private LocalDate date_depart;
 	
-	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password,LocalDate date_arrive,LocalDate date_depart)
+	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password,LocalDate date_arrive,LocalDate date_depart)
 	{
 		this.gestionPersonnel = gestionPersonnel;
 		this.nom = nom;
@@ -149,7 +149,17 @@ public class Employe implements Serializable, Comparable<Employe>
 	}
 	
 	public void setdatedepart(LocalDate date_depart) {
-		this.date_depart= date_depart;
+	    try {
+	        int resultatComparaison = date_depart.compareTo(date_arrive);
+
+	        if (resultatComparaison <= 0) {
+	            throw new IllegalArgumentException("La date d'arrivée doit être postérieure à la date de départ.");
+	        }
+
+	        this.date_depart = date_depart;
+	    } catch (IllegalArgumentException e) {
+	        System.out.println(e.getMessage());
+	    }
 	}
 	
 	public LocalDate getdatedepart() {
@@ -157,12 +167,7 @@ public class Employe implements Serializable, Comparable<Employe>
 	}
 	
 	public void setdatearrive(LocalDate date_arrive) {
-		if (date_depart != null && date_arrive != null && date_arrive.isEqual(date_depart)) {
-            throw new IllegalArgumentException("La date d'arrivée doit être differente de la date de départ.");
-        }
-		 if (date_depart != null && date_arrive != null && date_arrive.isBefore(date_depart)) {
-	            throw new IllegalArgumentException("La date d'arrivée doit être postérieure à la date de départ.");
-	        }
+	
 		this.date_arrive= date_arrive;
 	}
 	

@@ -2,6 +2,7 @@ package personnel;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -28,7 +29,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	 * @param nom le nom de la ligue.
 	 */
 	
-	Ligue(GestionPersonnel gestionPersonnel, String nom) throws SauvegardeImpossible
+	public Ligue(GestionPersonnel gestionPersonnel, String nom) throws SauvegardeImpossible
 	{
 		this(gestionPersonnel, -1, nom);
 		this.id = gestionPersonnel.insert(this); 
@@ -109,12 +110,24 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	 * @return l'employé créé. 
 	 */
 
-	public Employe addEmploye(String nom, String prenom, String mail, String password,LocalDate date_arrive,LocalDate date_depart)
-	{
-		Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password,date_arrive,date_depart);
-		employes.add(employe);
-		return employe;
+	public Employe addEmploye(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) {
+	    try {
+	        LocalDate.parse(date_arrive.toString());  
+	        LocalDate.parse(date_depart.toString());  
+
+	        if (date_depart.isBefore(date_arrive)) {
+	            throw new DateTimeParseException("Erreur : La date de départ ne peut pas être avant la date d'arrivée.", date_depart.toString(), 0);
+	        } else {
+	            Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, date_arrive, date_depart);
+	            employes.add(employe);
+	            return employe;
+	        }
+	    } catch (DateTimeParseException e) {
+	        System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");
+	        return null;  
+	    }
 	}
+
 	
 	void remove(Employe employe)
 	{

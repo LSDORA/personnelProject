@@ -30,6 +30,7 @@ public class LigueConsole
 		menu.add(afficherLigues());
 		menu.add(ajouterLigue());
 		menu.add(selectionnerLigue());
+		
 		menu.addBack("q");
 		return menu;
 	}
@@ -113,8 +114,11 @@ public class LigueConsole
 
 	            String dateDepartStr = getString("date de départ (YYYY-MM-DD) : ");
 	            LocalDate dateDepart = LocalDate.parse(dateDepartStr);
-
-	            ligue.addEmploye(nom, prenom, mail, password, dateArrivee, dateDepart);
+	            if (dateDepart.isBefore(dateArrivee)) {
+	                System.err.println("Erreur : La date de départ ne peut pas être avant la date d'arrivée.");
+	            } else {
+	                ligue.addEmploye(nom, prenom, mail, password, dateArrivee, dateDepart);
+	            }
 	        } catch (DateTimeParseException e) {
 	        	  System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");
 	        }
@@ -142,8 +146,14 @@ public class LigueConsole
 	
 	private List<Employe> changerAdministrateur(final Ligue ligue)
 	{
-		return null;
-	}		
+	    return new List<>("Changer l'administrateur", "c", 
+	            () -> new ArrayList<>(ligue.getEmployes()),
+	            (index, employe) -> {
+	                ligue.setAdministrateur(employe);
+	                System.out.println("Le nouvel administrateur est : " + employe.getNom());
+	            }
+	    );
+	}	
 
 	private List<Employe> modifierEmploye(final Ligue ligue)
 	{
