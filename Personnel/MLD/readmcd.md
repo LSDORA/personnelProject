@@ -11,7 +11,7 @@
 
 
 ## MCD DE LA LGUE
-[!cover](MCD_LIGUE_7.png)
+![cover](MCD_LIGUE_7.png)
 
 ### EXPLICATION DES RELATIONS
 > Il ya deux entités une entité LIGUE et EMPLOYE
