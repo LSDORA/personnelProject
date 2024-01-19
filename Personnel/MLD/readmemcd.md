@@ -8,8 +8,6 @@
 
 > Un seul employé n'appartient à aucune ligue c'est le root 
 
-
-
 ## MCD DE LA LGUE
 ![cover](MCD_LIGUE_7.png)
 
@@ -21,3 +19,6 @@
 > **Cardinalité**
 COMPOSER (0,n) du côté Ligue signifie que La ligue peut être composé de 0 ou plusieurs employés
    (0,1) du côté **Employé** signifie qu'un employé appartient au plus à une Ligue. 
+
+>SUPERVISER (1,1) côté LIGUE signifie qu'une ligue ne peut etre supervisé que par un et un seul employé(EST_root)
+(0,n) côté employé(EST_root) signifie qu'un employé peut superviser 0 ou plusioeurs Ligues.
