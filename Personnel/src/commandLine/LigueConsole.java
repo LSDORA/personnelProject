@@ -135,7 +135,17 @@ public class LigueConsole
 		return menu;
 	}
 
-	
+
+	private List<Employe> changerAdministrateur(final Ligue ligue)
+	{
+	    return new List<>("Changer l'administrateur", "c", 
+	            () -> new ArrayList<>(ligue.getEmployes()),
+	            (index, employe) -> {
+	                ligue.setAdministrateur(employe);
+	                System.out.println("Le nouvel administrateur est : " + employe.getNom());
+	            }
+	    );
+	}	
 	
 
 
