@@ -16,28 +16,45 @@ import personnel.Employe;
 
 public class EmployeConsole 
 {
+	private LigueConsole ligueConsole;
 	private Option afficher(final Employe employe)
 	{
 		return new Option("Afficher la date d'arriver de l'employé", "l", () -> {System.out.println(employe.getdatearrive());});
 	}
 
-	ListOption<Employe> editerEmploye()
+	ListOption<Employe> selectEmploye()
 	{
-		return (employe) -> editerEmploye(employe);		
+		return (employe) -> selectEmploye(employe);		
 	}
-
+	
 	Option editerEmploye(Employe employe)
 	{
-			Menu menu = new Menu("Gérer le compte " + employe.getNom(), "c");
-			menu.add(afficher(employe));
-			menu.add(changerNom(employe));
-			menu.add(changerPrenom(employe));
-			menu.add(changerMail(employe));
-			menu.add(changerPassword(employe));
-			menu.add(changerDateArrive(employe));
-			menu.add(changerDateDepart(employe));
-			menu.addBack("q");
-			return menu;
+		Menu menu = new Menu("Editer le compte " + employe.getNom(), "c");
+		menu.add(afficher(employe));
+		menu.add(changerNom(employe));
+		menu.add(changerPrenom(employe));
+		menu.add(changerMail(employe));
+		menu.add(changerPassword(employe));
+		menu.add(changerDateArrive(employe));
+		menu.add(changerDateDepart(employe));
+		menu.addBack("q");
+		return menu;
+	}
+
+	Option selectEmploye(Employe employe)
+	{
+		Menu menu = new Menu("sélectinoner le compte " + employe.getNom(), "c");
+	    menu.add(supprimeEmploye(employe));
+		menu.add(editerEmploye(employe));			
+		menu.addBack("q");
+		return menu;
+			
+	}
+	
+	private Option supprimeEmploye(final Employe employe) {
+		return new Option("Supprimer le compte " + employe.getNom(), "m", 
+				() -> {employe.remove();}
+			);
 	}
 
 	private Option changerNom(final Employe employe)
