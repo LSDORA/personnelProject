@@ -125,12 +125,13 @@ public class LigueConsole
 	    });
 	}
 
-	private Menu gererEmployes(Ligue ligue)
+	private Menu  gererEmployes(Ligue ligue)
 	{
 		Menu menu = new Menu("Gérer les employés de " + ligue.getNom(), "e");
 		menu.add(afficherEmployes(ligue));
 		menu.add(ajouterEmploye(ligue));
 		menu.add(selectionEmploye(ligue));
+		
 		menu.addBack("q");
 		return menu;
 	}
