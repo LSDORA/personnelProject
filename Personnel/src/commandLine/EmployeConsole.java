@@ -43,7 +43,7 @@ public class EmployeConsole
 
 	Option selectEmploye(Employe employe)
 	{
-		Menu menu = new Menu("sélectinoner l'employé " + employe.getNom(), "c");
+		Menu menu = new Menu("Choisissez une option ", "c");
 	    menu.add(supprimeEmploye(employe));
 		menu.add(editerEmploye(employe));			
 		menu.addBack("q");
