@@ -30,7 +30,6 @@ public class LigueConsole
 		menu.add(afficherLigues());
 		menu.add(ajouterLigue());
 		menu.add(selectionnerLigue());
-		
 		menu.addBack("q");
 		return menu;
 	}
@@ -130,7 +129,7 @@ public class LigueConsole
 		menu.add(afficherEmployes(ligue));
 		menu.add(ajouterEmploye(ligue));
 		menu.add(selectionEmploye(ligue));
-		menu.add(changerAdministrateur(ligue));
+	
 		menu.addBack("q");
 		return menu;
 	}

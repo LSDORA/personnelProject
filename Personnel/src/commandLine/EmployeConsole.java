@@ -12,6 +12,7 @@ import commandLineMenus.ListOption;
 import commandLineMenus.Menu;
 import commandLineMenus.Option;
 import personnel.Employe;
+import personnel.Ligue;
 
 
 public class EmployeConsole 
@@ -43,12 +44,22 @@ public class EmployeConsole
 
 	Option selectEmploye(Employe employe)
 	{
-		Menu menu = new Menu("Choisissez une option ", "c");
+		
+		Menu menu = new Menu("Choisir "+employe.getNom(), "c");
 	    menu.add(supprimeEmploye(employe));
-		menu.add(editerEmploye(employe));			
+		menu.add(editerEmploye(employe));	
+		menu.add(changerAdministrateur(employe.getLigue(),employe));
 		menu.addBack("q");
 		return menu;
 			
+	}
+	
+	private Option changerAdministrateur(Ligue ligue,Employe employe)
+	{
+		return new Option("Définir " + employe.getNom()+" comme administrateur", "a", 
+				() -> {ligue.setAdministrateur(employe);
+				       System.out.println("Le nouvel administrateur est : " +employe.getPrenom() +employe.getNom());}
+			);
 	}
 	
 	private Option supprimeEmploye(final Employe employe) {
