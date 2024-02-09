@@ -58,7 +58,7 @@ public class EmployeConsole
 	{
 		return new Option("Définir " + employe.getNom()+" comme administrateur", "a", 
 				() -> {ligue.setAdministrateur(employe);
-				       System.out.println("Le nouvel administrateur est : " +employe.getPrenom() +employe.getNom());}
+				       System.out.println("Le nouvel administrateur est : " +employe.getPrenom()+" "+employe.getNom());}
 			);
 	}
 	
