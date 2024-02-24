@@ -23,11 +23,13 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	private SortedSet<Employe> employes;
 	private Employe administrateur;
 	private GestionPersonnel gestionPersonnel;
+	private static Ligue ligue = null;
 	
 	/**
 	 * Crée une ligue.
 	 * @param nom le nom de la ligue.
 	 */
+
 	
 	public Ligue(GestionPersonnel gestionPersonnel, String nom) throws SauvegardeImpossible
 	{
@@ -111,21 +113,34 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	 */
 
 	public Employe addEmploye(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) {
-	    try {
-	        LocalDate.parse(date_arrive.toString());  
-	        LocalDate.parse(date_depart.toString());  
-
-	        if (date_depart.isBefore(date_arrive)) {
-	            throw new DateTimeParseException("Erreur : La date de départ ne peut pas être avant la date d'arrivée.", date_depart.toString(), 0);
-	        } else {
-	            Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, date_arrive, date_depart);
-	            employes.add(employe);
-	            return employe;
-	        }
-	    } catch (DateTimeParseException e) {
-	        System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");
-	        return null;  
-	    }
+		if (date_arrive == null && date_depart == null) {
+		    // La méthode addEmploye a renvoyé null, ce qui signifie que les dates d'arrivée ou de départ étaient nulles
+		    // Afficher les autres données de l'employé
+			String passwordEmploye = password;
+		    System.out.println("Nom: " + nom + ", Prénom: " + prenom + ", Mail: " + mail + ", Password: " + passwordEmploye);
+		    return null;
+		} else {
+			 try {
+			        if (date_arrive == null || date_depart == null) {
+			            throw new IllegalArgumentException("Les dates d'arrivée et de départ ne peuvent pas être null.");
+			        }
+			        
+			        if (date_depart.isBefore(date_arrive)) {
+			            throw new DateTimeParseException("Erreur : La date de départ ne peut pas être avant la date d'arrivée.", date_depart.toString(), 0);
+			        } else {
+			            Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, date_arrive, date_depart);
+			            employes.add(employe);
+			            return employe;
+			        }
+			    } catch (DateTimeParseException e) {
+			        System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");
+			        return null;
+			    } catch (IllegalArgumentException e) {
+			        System.err.println(e.getMessage());
+			        return null;
+			    }
+		}
+	   
 	}
 
 	

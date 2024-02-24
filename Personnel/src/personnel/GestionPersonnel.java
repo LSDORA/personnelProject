@@ -23,12 +23,12 @@ public class GestionPersonnel implements Serializable
 	private Employe root = new Employe(this, null, "root", "", "", "toor",LocalDate.now(), LocalDate.now());
 	public final static int SERIALIZATION = 1, JDBC = 2, 
 			TYPE_PASSERELLE = JDBC;  
-	private static Passerelle passerelle = new jdbc.JDBC();	
+	private static Passerelle passerelle = TYPE_PASSERELLE == JDBC ? new jdbc.JDBC() : new serialisation.Serialization();	
 	
 	/**
 	 * Retourne l'unique instance de cette classe.
 	 * Crée cet objet s'il n'existe déjà.
-	 * @return l'unique objet de type {@link GestionPersonnel}.
+	 * @return l'unique objet de type {@link GestionPersonnel}.  
 	 */
 	
 	public static GestionPersonnel getGestionPersonnel()
@@ -36,6 +36,7 @@ public class GestionPersonnel implements Serializable
 		if (gestionPersonnel == null)
 		{
 			gestionPersonnel = passerelle.getGestionPersonnel();
+		
 			if (gestionPersonnel == null)
 				gestionPersonnel = new GestionPersonnel();
 		}
@@ -97,6 +98,7 @@ public class GestionPersonnel implements Serializable
 	 void remove(Ligue ligue)
 	{
 		ligues.remove(ligue);
+		
 	}
 	
 	int insert(Ligue ligue) throws SauvegardeImpossible
