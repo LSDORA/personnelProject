@@ -15,22 +15,29 @@ public class Employe implements Serializable, Comparable<Employe>
 	private static final long serialVersionUID = 4795721718037994734L;
 	private String nom, prenom, password, mail;
 	private Ligue ligue;
+	private int id; 
 	private GestionPersonnel gestionPersonnel;
 	private LocalDate date_arrive;
     private LocalDate date_depart;
 	
-	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password,LocalDate date_arrive,LocalDate date_depart)
-	{
-		this.gestionPersonnel = gestionPersonnel;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.password = password;
-		this.mail = mail;
-		this.ligue = ligue;
-		this.date_arrive = date_arrive;
-		this.date_depart = date_depart;
-	}
-	
+    public Employe(GestionPersonnel gestionPersonnel) throws SauvegardeImpossible {
+        this(gestionPersonnel, null, "root", "", "", "toor", LocalDate.now(), LocalDate.now());
+        this.id = gestionPersonnel.insert(this); 
+    }
+
+    
+    public Employe(GestionPersonnel gestionPersonnel, Ligue ligue,
+    		String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) {
+        this.gestionPersonnel = gestionPersonnel;
+       
+        this.nom = nom;
+        this.prenom = prenom;
+        this.password = password;
+        this.mail = mail;
+        this.ligue = ligue;
+        this.date_arrive = date_arrive;
+        this.date_depart = date_depart;
+    }
 	/**
 	 * Retourne vrai ssi l'employé est administrateur de la ligue 
 	 * passée en paramètre.
@@ -44,7 +51,16 @@ public class Employe implements Serializable, Comparable<Employe>
 	{
 		return ligue.getAdministrateur() == this;
 	}
-	
+
+    public int getId() {
+        return id;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
 	/**
 	 * Retourne vrai ssi l'employé est le root.
 	 * @return vrai ssi l'employé est le root.

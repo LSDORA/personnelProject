@@ -35,23 +35,23 @@ public class JDBC implements Passerelle
 	public GestionPersonnel getGestionPersonnel() {
 	    GestionPersonnel gestionPersonnel = new GestionPersonnel();
 	    try {
-	        // Récupération des informations sur les ligues
+	     
 	        String requeteLigues = "SELECT * FROM ligue";
 	        Statement instructionLigues = connection.createStatement();
 	        ResultSet resultLigues = instructionLigues.executeQuery(requeteLigues);
 
-	        // Parcours des ligues
+	       
 	        while (resultLigues.next()) {
 	            int idLigue = resultLigues.getInt("id_ligue");
 	            String nomLigue = resultLigues.getString("nom");
 	            Ligue ligue = gestionPersonnel.addLigue(idLigue, nomLigue);
 
-	            // Récupération des informations sur les employés associés à chaque ligue
+	            
 	            String requeteEmployes = "SELECT * FROM employe WHERE ligue = " + idLigue;
 	            Statement instructionEmployes = connection.createStatement();
 	            ResultSet resultEmployes = instructionEmployes.executeQuery(requeteEmployes);
 
-	            // Parcours des employés associés à la ligue actuelle
+	            
 	            while (resultEmployes.next()) {
 	                String nomEmploye = resultEmployes.getString("nom");
 	                String prenomEmploye = resultEmployes.getString("prenom");
@@ -62,11 +62,11 @@ public class JDBC implements Passerelle
 
 	                ligue.addEmploye(nomEmploye, prenomEmploye, mailEmploye, passwordEmploye, dateArrive, dateDepart);
 	            }
-	            // Fermeture du ResultSet et du Statement pour les employés
+	            
 	            resultEmployes.close();
 	            instructionEmployes.close();
 	        }
-	        // Fermeture du ResultSet et du Statement pour les ligues
+	       
 	        resultLigues.close();
 	        instructionLigues.close();
 	    } catch (SQLException e) {
@@ -116,4 +116,27 @@ public class JDBC implements Passerelle
 			throw new SauvegardeImpossible(exception);
 		}		
 	}
+	@Override
+	public int insert(Employe employe) throws SauvegardeImpossible {
+	    try {
+	        PreparedStatement instruction;
+	        instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, ligue, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+	        instruction.setString(1, employe.getNom());
+	        instruction.setString(2, employe.getPrenom());
+	        instruction.setString(3, employe.getMail());
+	        instruction.setString(4, employe.getPassword());
+	        instruction.setInt(5, employe.getLigue().getId());
+	        instruction.setDate(6, java.sql.Date.valueOf(employe.getdatearrive()));
+	        instruction.setDate(7, java.sql.Date.valueOf(employe.getdatedepart()));
+	        
+	        instruction.executeUpdate();
+	        ResultSet id = instruction.getGeneratedKeys();
+	        id.next();
+	        return id.getInt(1);
+	    } catch (SQLException exception) {
+	        exception.printStackTrace();
+	        throw new SauvegardeImpossible(exception);
+	    }
+	}
+
 }

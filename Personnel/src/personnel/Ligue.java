@@ -18,7 +18,7 @@ import java.util.TreeSet;
 public class Ligue implements Serializable, Comparable<Ligue>
 {
 	private static final long serialVersionUID = 1L;
-	private int id = -1;
+	private int id;
 	private String nom;
 	private SortedSet<Employe> employes;
 	private Employe administrateur;
@@ -50,7 +50,9 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	 * Retourne le nom de la ligue.
 	 * @return le nom de la ligue.
 	 */
-
+    public int getId(){
+    	return id;
+    }
 	public String getNom()
 	{
 		return nom;
