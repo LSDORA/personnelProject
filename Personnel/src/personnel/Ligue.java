@@ -31,7 +31,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	 */
 
 	
-	public Ligue(GestionPersonnel gestionPersonnel, String nom) throws SauvegardeImpossible
+	Ligue(GestionPersonnel gestionPersonnel, String nom) throws SauvegardeImpossible
 	{
 		this(gestionPersonnel, -1, nom);
 		this.id = gestionPersonnel.insert(this); 
@@ -130,7 +130,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
 			        if (date_depart.isBefore(date_arrive)) {
 			            throw new DateTimeParseException("Erreur : La date de départ ne peut pas être avant la date d'arrivée.", date_depart.toString(), 0);
 			        } else {
-			            Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, date_arrive, date_depart);
+			            Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, date_arrive, date_depart,id);
 			            employes.add(employe);
 			            return employe;
 			        }

@@ -20,16 +20,20 @@ public class Employe implements Serializable, Comparable<Employe>
 	private LocalDate date_arrive;
     private LocalDate date_depart;
 	
-    public Employe(GestionPersonnel gestionPersonnel) throws SauvegardeImpossible {
-        this(gestionPersonnel, null, "root", "", "", "toor", LocalDate.now(), LocalDate.now());
-        this.id = gestionPersonnel.insert(this); 
-    }
-
+     Employe(GestionPersonnel gestionPersonnel, Ligue ligue,
+    		String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) throws SauvegardeImpossible
+	{
     
-    public Employe(GestionPersonnel gestionPersonnel, Ligue ligue,
-    		String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) {
+    	this(gestionPersonnel, ligue, nom, prenom, mail, password,date_arrive, date_depart,-1);
+		this.id = gestionPersonnel.insert(this); 
+    	
+	}
+    
+    
+     Employe(GestionPersonnel gestionPersonnel, Ligue ligue,
+    		String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart,int id) {
         this.gestionPersonnel = gestionPersonnel;
-       
+        this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.password = password;
@@ -37,6 +41,7 @@ public class Employe implements Serializable, Comparable<Employe>
         this.ligue = ligue;
         this.date_arrive = date_arrive;
         this.date_depart = date_depart;
+     
     }
 	/**
 	 * Retourne vrai ssi l'employé est administrateur de la ligue 
@@ -58,9 +63,7 @@ public class Employe implements Serializable, Comparable<Employe>
     public String getPassword() {
         return password;
     }
-    public void setId(int id) {
-        this.id = id;
-    }
+  
 	/**
 	 * Retourne vrai ssi l'employé est le root.
 	 * @return vrai ssi l'employé est le root.

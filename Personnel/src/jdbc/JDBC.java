@@ -32,7 +32,7 @@ public class JDBC implements Passerelle
 	}
 	
 	@Override
-	public GestionPersonnel getGestionPersonnel() {
+	public GestionPersonnel getGestionPersonnel() throws SauvegardeImpossible {
 	    GestionPersonnel gestionPersonnel = new GestionPersonnel();
 	    try {
 	     
@@ -120,15 +120,20 @@ public class JDBC implements Passerelle
 	public int insert(Employe employe) throws SauvegardeImpossible {
 	    try {
 	        PreparedStatement instruction;
-	        instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, ligue, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+	        if (employe.getLigue() != null) {
+	            instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, ligue, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+	            instruction.setInt(5, employe.getLigue().getId());
+	        } else {
+	            instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+	        }
+	        
 	        instruction.setString(1, employe.getNom());
 	        instruction.setString(2, employe.getPrenom());
 	        instruction.setString(3, employe.getMail());
 	        instruction.setString(4, employe.getPassword());
-	        instruction.setInt(5, employe.getLigue().getId());
-	        instruction.setDate(6, java.sql.Date.valueOf(employe.getdatearrive()));
-	        instruction.setDate(7, java.sql.Date.valueOf(employe.getdatedepart()));
-	        
+	        instruction.setDate(5, java.sql.Date.valueOf(employe.getdatearrive()));
+	        instruction.setDate(6, java.sql.Date.valueOf(employe.getdatedepart()));
+
 	        instruction.executeUpdate();
 	        ResultSet id = instruction.getGeneratedKeys();
 	        id.next();
@@ -138,5 +143,6 @@ public class JDBC implements Passerelle
 	        throw new SauvegardeImpossible(exception);
 	    }
 	}
+
 
 }
