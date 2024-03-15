@@ -13,6 +13,7 @@ import personnel.*;
 public class JDBC implements Passerelle 
 {
 	Connection connection;
+	private Employe root;
 
 	public JDBC()
 	{
@@ -34,8 +35,33 @@ public class JDBC implements Passerelle
 	@Override
 	public GestionPersonnel getGestionPersonnel() throws SauvegardeImpossible {
 	    GestionPersonnel gestionPersonnel = new GestionPersonnel();
+	
 	    try {
-	     
+	    	String recupRoot = "SELECT * FROM employe WHERE root=1 ";
+	    	Statement instructionRoot = connection.createStatement();
+	    	ResultSet resultRoot = instructionRoot.executeQuery(recupRoot);
+	    	
+	    	if (resultRoot.next()) { // Assurez-vous qu'il y a une ligne de résultat
+	    	    String nom = resultRoot.getString("nom");
+	    	    String prenom = resultRoot.getString("prenom");
+	    	    String mail = resultRoot.getString("mail");
+	    	    String password = resultRoot.getString("password");
+	    	    LocalDate dateA = resultRoot.getDate("date_arrive").toLocalDate();
+	    	    LocalDate dateD = resultRoot.getDate("date_depart").toLocalDate();
+	    	    int id = resultRoot.getInt("ID_EMPLOYE");
+
+	    	    root.setNom(nom);
+	    	    root.setPrenom(prenom);
+	    	    root.setMail(mail);
+	    	    root.setPassword(password);
+	    	    root.setdatearrive(dateA);
+	    	    root.setdatedepart(dateD);
+	    	   
+	    	    this.root = root;
+	    	 
+	    	}
+	    	
+	    	
 	        String requeteLigues = "SELECT * FROM ligue";
 	        Statement instructionLigues = connection.createStatement();
 	        ResultSet resultLigues = instructionLigues.executeQuery(requeteLigues);
