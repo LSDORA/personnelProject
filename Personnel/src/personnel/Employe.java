@@ -50,8 +50,22 @@ public class Employe implements Serializable, Comparable<Employe>
 	 * passée en paramètre.
 	 * @param ligue la ligue pour laquelle on souhaite vérifier si this 
 	 * est l'admininstrateur.
+	 * @throws SauvegardeImpossible 
 	 */
-	
+     public Employe addRoot(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) throws SauvegardeImpossible {
+    	    // Vérifie d'abord si le root existe déjà
+    	    if (gestionPersonnel.getRoot() != null) {
+    	        throw new IllegalStateException("Le root existe déjà.");
+    	    }
+    	    
+    	    // Crée un nouvel employé qui sera le root
+    	    Employe root = new Employe(gestionPersonnel, null, nom, prenom, mail, password, date_arrive, date_depart);
+			return root;
+    	    
+    	    // Affecte le root à la variable d'instance de GestionPersonnel
+    	   
+    	}
+     
 	public boolean estAdmin(Ligue ligue)
 	{
 		return ligue.getAdministrateur() == this;
@@ -231,4 +245,6 @@ public class Employe implements Serializable, Comparable<Employe>
 			res += ligue.toString();
 		return res + ")";
 	}
+	
+	
 }
