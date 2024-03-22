@@ -5,7 +5,7 @@ import static commandLineMenus.rendering.examples.util.InOut.getString;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-import static commandLineMenus.rendering.examples.util.InOut.getInt;
+
 
 
 import commandLineMenus.ListOption;
@@ -18,7 +18,7 @@ import personnel.SauvegardeImpossible;
 
 public class EmployeConsole 
 {
-	private LigueConsole ligueConsole;
+	
 	private Option afficher(final Employe employe)
 	{
 		return new Option("Afficher la date d'arriver de l'employé", "l", () -> {System.out.println(employe.getdatearrive());});
@@ -68,7 +68,7 @@ public class EmployeConsole
 				() -> {try {
 					employe.remove();
 				} catch (SauvegardeImpossible e) {
-					// TODO Auto-generated catch block
+				
 					e.printStackTrace();
 				}}
 			);

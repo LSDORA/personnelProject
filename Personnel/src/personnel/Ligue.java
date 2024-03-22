@@ -23,8 +23,6 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	private SortedSet<Employe> employes;
 	private Employe administrateur;
 	private GestionPersonnel gestionPersonnel;
-	private static Ligue ligue = null;
-	
 	/**
 	 * Crée une ligue.
 	 * @param nom le nom de la ligue.
@@ -114,9 +112,10 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	 * @param mail l'adresse mail de l'employé.
 	 * @param password le password de l'employé.
 	 * @return l'employé créé. 
+	 * @throws SauvegardeImpossible 
 	 */
 
-	public Employe addEmploye(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) {
+	public Employe addEmploye(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) throws SauvegardeImpossible {
 		if (date_arrive == null && date_depart == null) {
 		    // La méthode addEmploye a renvoyé null, ce qui signifie que les dates d'arrivée ou de départ étaient nulles
 		    // Afficher les autres données de l'employé
@@ -134,6 +133,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
 			        } else {
 			            Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, date_arrive, date_depart,id);
 			            employes.add(employe);
+			            
 			            return employe;
 			        }
 			    } catch (DateTimeParseException e) {
@@ -162,6 +162,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	public void remove() throws SauvegardeImpossible
 	{
 		gestionPersonnel.remove(this);
+		GestionPersonnel.getGestionPersonnel();
 	}
 	
 
