@@ -29,7 +29,7 @@ public class Employe implements Serializable, Comparable<Employe>
     	
 	}
     
-    
+     // ajout de IDto
      Employe(GestionPersonnel gestionPersonnel, Ligue ligue,
     		String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart,int id) {
         this.gestionPersonnel = gestionPersonnel;
@@ -41,7 +41,7 @@ public class Employe implements Serializable, Comparable<Employe>
         this.ligue = ligue;
         this.date_arrive = date_arrive;
         this.date_depart = date_depart;
-     
+     // ajout de ID
     }
 	/**
 	 * Retourne vrai ssi l'employé est administrateur de la ligue 
@@ -52,19 +52,7 @@ public class Employe implements Serializable, Comparable<Employe>
 	 * est l'admininstrateur.
 	 * @throws SauvegardeImpossible 
 	 */
-     public Employe addRoot(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) throws SauvegardeImpossible {
-    	    // Vérifie d'abord si le root existe déjà
-    	    if (gestionPersonnel.getRoot() != null) {
-    	        throw new IllegalStateException("Le root existe déjà.");
-    	    }
-    	    
-    	    // Crée un nouvel employé qui sera le root
-    	    Employe root = new Employe(gestionPersonnel, null, nom, prenom, mail, password, date_arrive, date_depart);
-			return root;
-    	    
-    	    // Affecte le root à la variable d'instance de GestionPersonnel
-    	   
-    	}
+     
      
 	public boolean estAdmin(Ligue ligue)
 	{
@@ -101,11 +89,18 @@ public class Employe implements Serializable, Comparable<Employe>
 	/**
 	 * Change le nom de l'employé.
 	 * @param nom le nouveau nom.
+	 * @throws SauvegardeImpossible 
 	 */
 	
-	public void setNom(String nom)
+	public void setNom(String nom) 
 	{
 		this.nom = nom;
+		try {
+			gestionPersonnel.update(this);
+		} catch (SauvegardeImpossible e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -121,11 +116,18 @@ public class Employe implements Serializable, Comparable<Employe>
 	/**
 	 * Change le prénom de l'employé.
 	 * @param prenom le nouveau prénom de l'employé. 
+	 * @throws SauvegardeImpossible 
 	 */
 
-	public void setPrenom(String prenom)
+	public void setPrenom(String prenom) 
 	{
 		this.prenom = prenom;
+		try {
+			gestionPersonnel.update(this);
+		} catch (SauvegardeImpossible e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -141,11 +143,18 @@ public class Employe implements Serializable, Comparable<Employe>
 	/**
 	 * Change le mail de l'employé.
 	 * @param mail le nouveau mail de l'employé.
+	 * @throws SauvegardeImpossible 
 	 */
 
-	public void setMail(String mail)
+	public void setMail(String mail) 
 	{
 		this.mail = mail;
+		try {
+			gestionPersonnel.update(this);
+		} catch (SauvegardeImpossible e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -164,11 +173,18 @@ public class Employe implements Serializable, Comparable<Employe>
 	/**
 	 * Change le password de l'employé.
 	 * @param password le nouveau password de l'employé. 
+	 * @throws SauvegardeImpossible 
 	 */
 	
-	public void setPassword(String password)
+	public void setPassword(String password) 
 	{
 		this.password= password;
+		try {
+			gestionPersonnel.update(this);
+		} catch (SauvegardeImpossible e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -190,6 +206,12 @@ public class Employe implements Serializable, Comparable<Employe>
 	        }
 
 	        this.date_depart = date_depart;
+	        try {
+				gestionPersonnel.update(this);
+			} catch (SauvegardeImpossible e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    } catch (IllegalArgumentException e) {
 	        System.out.println(e.getMessage());
 	    }
@@ -202,6 +224,13 @@ public class Employe implements Serializable, Comparable<Employe>
 	public void setdatearrive(LocalDate date_arrive) {
 	
 		this.date_arrive= date_arrive;
+		try {
+			gestionPersonnel.update(this);
+		} catch (SauvegardeImpossible e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public LocalDate getdatearrive() {

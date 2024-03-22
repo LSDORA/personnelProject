@@ -142,10 +142,12 @@ public class JDBC implements Passerelle
 		try 
 		{
 			PreparedStatement instruction;
-			instruction = connection.prepareStatement("update ligue SET (nom) values(?)");
-			instruction.setString(1, ligue.getNom());		
+			instruction = connection.prepareStatement("UPDATE ligue SET nom = ? WHERE id_ligue = ?");
+			instruction.setString(1, ligue.getNom());
+			instruction.setInt(2, ligue.getId());
 			instruction.executeUpdate();
 			return ligue.getId();
+
 		} 
 		catch (SQLException exception) 
 		{
@@ -186,6 +188,31 @@ public class JDBC implements Passerelle
 	@Override
 	public int update(Employe employe) throws SauvegardeImpossible {
 		
+		return 0;
+	}
+
+	@Override
+	public int remove(Ligue ligue) throws SauvegardeImpossible {
+		try 
+		{
+			PreparedStatement instruction;
+			instruction = connection.prepareStatement("DELETE FROM ligue WHERE nom = ? AND id_ligue = ?");
+			instruction.setString(1, ligue.getNom());
+			instruction.setInt(2, ligue.getId());
+			instruction.executeUpdate();
+			return ligue.getId();
+
+		} 
+		catch (SQLException exception) 
+		{
+			exception.printStackTrace();
+			throw new SauvegardeImpossible(exception);
+		}		
+	}
+
+	@Override
+	public int remove(Employe employe) throws SauvegardeImpossible {
+		// TODO Auto-generated method stub
 		return 0;
 	}
 
