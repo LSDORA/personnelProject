@@ -69,7 +69,9 @@ public class JDBC implements Passerelle
 	            String requeteEmployes = "SELECT * FROM employe WHERE ligue = " + idLigue;
 	            Statement instructionEmployes = connection.createStatement();
 	            ResultSet resultEmployes = instructionEmployes.executeQuery(requeteEmployes);
-
+                String requeteAdmin = "SELECT ADMIN_LIGUE FROM ligue WHERE id_ligue =" + idLigue;
+                Statement instructionAdmin = connection.createStatement();
+	            ResultSet resultAdmin = instructionAdmin.executeQuery(requeteAdmin);
 	            
 	            while (resultEmployes.next()) {
 	                String nomEmploye = resultEmployes.getString("nom");
@@ -78,9 +80,21 @@ public class JDBC implements Passerelle
 	                String passwordEmploye = resultEmployes.getString("password");
 	                LocalDate dateArrive = resultEmployes.getDate("date_arrive").toLocalDate();
 	                LocalDate dateDepart = resultEmployes.getDate("date_depart").toLocalDate();
+	                int id = resultEmployes.getInt("ID_EMPLOYE");
 
 	                ligue.addEmploye(nomEmploye, prenomEmploye, mailEmploye, passwordEmploye, dateArrive, dateDepart);
+	                
+	                if (resultAdmin.next()) {
+	                    // Assuming ADMIN_LIGUE is a boolean field indicating whether the employee is an admin of the league
+	                    int isAdmin = resultAdmin.getInt("ADMIN_LIGUE");
+	                    if (id == isAdmin) {
+	                    	 Employe administrateur =  ligue.addEmploye(nomEmploye, prenomEmploye, mailEmploye, passwordEmploye, dateArrive, dateDepart);
+	                        ligue.setAdministrateur(administrateur);
+	                    }
+	                }
 	            }
+
+	         
 	            
 	            resultEmployes.close();
 	            instructionEmployes.close();
