@@ -200,6 +200,7 @@ public class JDBC implements Passerelle
 			instruction.setString(1, ligue.getNom());
 			instruction.setInt(2, ligue.getId());
 			instruction.executeUpdate();
+			
 			return ligue.getId();
 
 		} 
@@ -212,8 +213,18 @@ public class JDBC implements Passerelle
 
 	@Override
 	public int remove(Employe employe) throws SauvegardeImpossible {
-		// TODO Auto-generated method stub
-		return 0;
+
+		try {
+			PreparedStatement instruction;
+			instruction = connection.prepareStatement("DELETE FROM employe WHERE nom = ?");
+			instruction.setString(1, employe.getNom());
+			instruction.executeUpdate();
+			return employe.getId();
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+			throw new SauvegardeImpossible(exception);
+		}
+
 	}
 
 
