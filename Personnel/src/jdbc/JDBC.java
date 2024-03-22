@@ -36,10 +36,9 @@ public class JDBC implements Passerelle
 	public GestionPersonnel getGestionPersonnel() throws SauvegardeImpossible {
 
 	    GestionPersonnel gestionPersonnel = new GestionPersonnel();
-	    Employe root = null;
 	
 	    try {
-	    	String recupRoot = "SELECT * FROM employe WHERE root=1 ";
+	    	String recupRoot = "SELECT * FROM employe WHERE root = 1 ";
 	    	Statement instructionRoot = connection.createStatement();
 	    	ResultSet resultRoot = instructionRoot.executeQuery(recupRoot);
 	    	
@@ -52,7 +51,7 @@ public class JDBC implements Passerelle
 	    	    LocalDate dateD = resultRoot.getDate("date_depart").toLocalDate();
 	    	    int id = resultRoot.getInt("ID_EMPLOYE");
 
-	    	    root.addRoot(nom, prenom, mail, password, dateA, dateD);
+	    	    gestionPersonnel.addRoot(nom, prenom, mail, password, dateA, dateD,id);
 	    	}
 	    	
 	    	
@@ -143,7 +142,7 @@ public class JDBC implements Passerelle
 		try 
 		{
 			PreparedStatement instruction;
-			instruction = connection.prepareStatement("update ligue SET (nom) values(?)", Statement.RETURN_GENERATED_KEYS);
+			instruction = connection.prepareStatement("update ligue SET (nom) values(?)");
 			instruction.setString(1, ligue.getNom());		
 			instruction.executeUpdate();
 			return ligue.getId();
@@ -157,6 +156,8 @@ public class JDBC implements Passerelle
 	@Override
 	public int insert(Employe employe) throws SauvegardeImpossible {
 	    try {
+	    	
+	  
 	        PreparedStatement instruction;
 	        if (employe.getLigue() != null) {
 	            instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, ligue, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);

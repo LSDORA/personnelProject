@@ -49,7 +49,7 @@ public class GestionPersonnel implements Serializable
 			throw new RuntimeException("Vous ne pouvez créer qu'une seuls instance de cet objet.");
 		ligues = new TreeSet<>();
 		gestionPersonnel = this;
-		root = new Employe(this, null, "root", "", "", "toor",LocalDate.now(), LocalDate.now());
+
 		
 	}
 	
@@ -111,6 +111,9 @@ public class GestionPersonnel implements Serializable
 	{
 		return passerelle.update(ligue);
 	}
+	public int update(Employe employe)throws SauvegardeImpossible
+	{
+		return passerelle.update(employe);	}
 	int insert(Employe employe) throws SauvegardeImpossible
 	{
 		return passerelle.insert(employe);
@@ -126,13 +129,11 @@ public class GestionPersonnel implements Serializable
 	{
 		return root;
 	}
-	public Employe addRoot(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) throws SauvegardeImpossible {
+	public Employe addRoot(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart,int id) throws SauvegardeImpossible {
 	    
-	    if (gestionPersonnel.getRoot() != null) {
-	    	return root;
-	    }
-
-	    Employe root = new Employe(gestionPersonnel, null, nom, prenom, mail, password, date_arrive, date_depart);
+	
+ 
+	    root = new Employe(gestionPersonnel, null, nom, prenom, mail, password, date_arrive, date_depart,id);
 		return root;
 	    
 	    
