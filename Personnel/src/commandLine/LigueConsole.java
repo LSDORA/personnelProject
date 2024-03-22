@@ -87,7 +87,7 @@ public class LigueConsole
 					ligue.setNom(getString("Nouveau nom : "));
 					
 				} catch (SauvegardeImpossible e) {
-					// TODO Auto-generated catch block
+			
 					e.printStackTrace();
 				}});
 	}
@@ -125,7 +125,10 @@ public class LigueConsole
 	            }
 	        } catch (DateTimeParseException e) {
 	        	  System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");
-	        }
+	        } catch (SauvegardeImpossible e) {
+		
+				e.printStackTrace();
+			}
 	    });
 	}
 
@@ -141,7 +144,7 @@ public class LigueConsole
 	}
 
 
-	private List<Employe> changerAdministrateur(final Ligue ligue)
+/* 	private List<Employe> changerAdministrateur(final Ligue ligue)
 	{
 	    return new List<>("Changer l'administrateur", "c", 
 	            () -> new ArrayList<>(ligue.getEmployes()),
@@ -151,7 +154,7 @@ public class LigueConsole
 	            }
 	    );
 	}	
-	
+	*/
 
 
 	private List<Employe> selectionEmploye(final Ligue ligue)
@@ -167,7 +170,7 @@ public class LigueConsole
 		return new Option("Supprimer", "d", () -> {try {
 			ligue.remove();
 		} catch (SauvegardeImpossible e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}});
 	}
