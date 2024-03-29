@@ -9,7 +9,7 @@
 > Un seul employé n'appartient à aucune ligue c'est le root 
 
 ## MCD DE LA LGUE
-![cover](MCD_LIGUE_7.png)
+![cover](MCD_LIGUE_EMPLOYE.png)
 
 ### EXPLICATION DES RELATIONS
 > Il ya deux entités une entité LIGUE et EMPLOYE
@@ -20,5 +20,9 @@
 COMPOSER (0,n) du côté Ligue signifie que La ligue peut être composé de 0 ou plusieurs employés
    (0,1) du côté **Employé** signifie qu'un employé appartient au plus à une Ligue. 
 
->SUPERVISER (1,1) côté LIGUE signifie qu'une ligue ne peut etre supervisé que par un et un seul employé(EST_root)
-(0,n) côté employé(EST_root) signifie qu'un employé peut superviser 0 ou plusioeurs Ligues.
+>SUPERVISER (0,1) côté LIGUE signifie qu'une ligue ne peut etre supervisé que par zéro ou un employé(Admin de la ligue).
+- le cas Zéro est là pour traduire le fait que lorsque la ligue n'a pas d'employés elle est supervisée par le **ROOT**
+
+>SUPERVISER(0,1) côté **EMPLOYE** signifie qu'un employé par LIGUE est Admin et qu'il n'administre que sa ligue.
+- Autrement dit un employé ne gere que 0 ou 1 ligue.
+- Le seul employé à gerer plusieurs ligues c'est le **root** 
