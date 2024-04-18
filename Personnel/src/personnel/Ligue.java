@@ -115,37 +115,19 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	 * @throws SauvegardeImpossible 
 	 */
 
-	public Employe addEmploye(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) throws SauvegardeImpossible {
-		if (date_arrive == null && date_depart == null) {
-		    // La méthode addEmploye a renvoyé null, ce qui signifie que les dates d'arrivée ou de départ étaient nulles
-		    // Afficher les autres données de l'employé
-			String passwordEmploye = password;
-		    System.out.println("Nom: " + nom + ", Prénom: " + prenom + ", Mail: " + mail + ", Password: " + passwordEmploye);
-		    return null;
-		} else {
-			 try {
-			        if (date_arrive == null || date_depart == null) {
-			            throw new IllegalArgumentException("Les dates d'arrivée et de départ ne peuvent pas être null.");
-			        }
-			        
-			        if (date_depart.isBefore(date_arrive)) {
-			            throw new DateTimeParseException("Erreur : La date de départ ne peut pas être avant la date d'arrivée.", date_depart.toString(), 0);
-			        } else {
-			            Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, date_arrive, date_depart,id);
+	public Employe addEmploye(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart) throws SauvegardeImpossible {       
+			            Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, date_arrive, date_depart);
 			            employes.add(employe);
-			            
 			            return employe;
 			        }
-			    } catch (DateTimeParseException e) {
-			        System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");
-			        return null;
-			    } catch (IllegalArgumentException e) {
-			        System.err.println(e.getMessage());
-			        return null;
-			    }
-		}
-	   
-	}
+	public Employe addEmploye(String nom, String prenom, String mail, String password, LocalDate date_arrive, LocalDate date_depart,int id) throws SauvegardeImpossible {       
+        Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, date_arrive, date_depart,id);
+        employes.add(employe);
+        return employe;
+    }
+
+	
+	
 
 	
 	void remove(Employe employe)

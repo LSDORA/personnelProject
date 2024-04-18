@@ -122,6 +122,7 @@ public class LigueConsole
 	                System.err.println("Erreur : La date de départ ne peut pas être avant la date d'arrivée.");
 	            } else {
 	                ligue.addEmploye(nom, prenom, mail, password, dateArrivee, dateDepart);
+	                 
 	            }
 	        } catch (DateTimeParseException e) {
 	        	  System.err.println("Erreur de format de date : Utilisez le format YYYY-MM-DD.");

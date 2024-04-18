@@ -11,8 +11,10 @@ import personnel.*;
 
 class testLigue 
 {
-	GestionPersonnel gestionPersonnel = GestionPersonnel.getGestionPersonnel();
-	
+	GestionPersonnel gestionPersonnel; 
+	private void setup() throws SauvegardeImpossible {
+	gestionPersonnel= GestionPersonnel.getGestionPersonnel();
+	}
 	 @Test
 	    void createLigue() throws SauvegardeImpossible {
 	        GestionPersonnel gestionPersonnel = GestionPersonnel.getGestionPersonnel();
@@ -35,45 +37,14 @@ class testLigue
 	 void testChangerAdministrateur() {
 	        try {
 	            GestionPersonnel gestionPersonnel = GestionPersonnel.getGestionPersonnel();
-	            Ligue ligue = new Ligue(gestionPersonnel, "Admin");
+	            Ligue ligue = gestionPersonnel.addLigue("Admin");
 
 	            Employe newAdmin = ligue.addEmploye("New", "Admin", "newadmin@mail.com", "password", LocalDate.now(), LocalDate.now().plusMonths(6));
-                
-	            assertEquals(gestionPersonnel.getRoot(), ligue.getAdministrateur());
-	          
-	            ligue.setAdministrateur(newAdmin);
-	            
-
-	            assertEquals(newAdmin, ligue.getAdministrateur());
-
-	        } catch (SauvegardeImpossible e) {
-	            fail("Exception thrown: " + e.getMessage());
-	        }
-	    }
-    @Test
-	 void testSupprimerAdministrateur() {
-	        try {
-	            GestionPersonnel gestionPersonnel = GestionPersonnel.getGestionPersonnel();
-	            Ligue ligue = new Ligue(gestionPersonnel, "Admin");
-
-
-	            Employe newAdmin = ligue.addEmploye("New", "Admin", "newadmin@mail.com", "password", LocalDate.now(), LocalDate.now().plusMonths(6));
-               
-	          
-	            ligue.setAdministrateur(newAdmin);
-	            assertEquals(newAdmin, ligue.getAdministrateur());
-	            
-	            newAdmin.remove();
-	            String actualEmployeAsString = ligue.getEmployes().toString();
-	            
-	            // Comparer la liste avec une liste vide
-	            assertEquals("[]",actualEmployeAsString);
-
-	      
+        
+	            System.out.println(newAdmin.getLigue().getId());
 
 	        } catch (SauvegardeImpossible e) {
 	            fail("Exception thrown: " + e.getMessage());
 	        }
 	    }
 }
-

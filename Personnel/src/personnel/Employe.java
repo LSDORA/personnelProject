@@ -204,6 +204,9 @@ public class Employe implements Serializable, Comparable<Employe>
 	        if (resultatComparaison <= 0) {
 	            throw new IllegalArgumentException("La date d'arrivée doit être postérieure à la date de départ.");
 	        }
+	        if(date_arrive == null){
+	   		 throw new IllegalArgumentException("Les dates d'arrivée et de départ ne peuvent pas être null.");
+	   	}
 
 	        this.date_depart = date_depart;
 	        try {
@@ -222,7 +225,9 @@ public class Employe implements Serializable, Comparable<Employe>
 	}
 	
 	public void setdatearrive(LocalDate date_arrive) {
-	
+	if(date_arrive == null){
+		 throw new IllegalArgumentException("Les dates d'arrivée et de départ ne peuvent pas être null.");
+	}
 		this.date_arrive= date_arrive;
 		try {
 			gestionPersonnel.update(this);
