@@ -762,7 +762,7 @@ public class PersonnelGUI extends JFrame {
             selemp.setVisible(false);
         });
         selemp.add(jButton1);
-        jButton1.setBounds(-7, 0, 1010, 71);
+        jButton1.setBounds(-7, 0, 1000, 71);
 
         jLabel2 = new JLabel();
         jLabel2.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
