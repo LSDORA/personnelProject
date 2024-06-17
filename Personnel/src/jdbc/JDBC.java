@@ -43,7 +43,7 @@ public class JDBC implements Passerelle
 	        Statement instructionRoot = connection.createStatement();
 	        ResultSet resultRoot = instructionRoot.executeQuery(recupRoot);
 
-	        if (resultRoot.next()) { 
+	        if (resultRoot.next()) {
 	            String nom = resultRoot.getString("nom");
 	            String prenom = resultRoot.getString("prenom");
 	            String mail = resultRoot.getString("mail");
@@ -53,6 +53,9 @@ public class JDBC implements Passerelle
 	            int id = resultRoot.getInt("ID_EMPLOYE");
 
 	            gestionPersonnel.addRoot(nom, prenom, mail, password, dateA, dateD, id);
+	        } else {
+	            // Si aucun root trouvé, ajouter un root par défaut
+	            gestionPersonnel.addRoot("root", "root", "root", "root", LocalDate.now(), LocalDate.now());
 	        }
 	        resultRoot.close();
 	        instructionRoot.close();

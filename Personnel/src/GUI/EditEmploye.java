@@ -38,7 +38,7 @@ public class EditEmploye extends JFrame {
             JPanel EmployeEditPanel = new JPanel();
         	EmployeEditPanel.setLayout(null); 
         	
-        	EmployeEditPanel.setPreferredSize(new java.awt.Dimension(1000, 450));
+        	EmployeEditPanel.setPreferredSize(new java.awt.Dimension(1000, 520));
 	        
         	 JLabel NomTittle = new JLabel(employe.getNom());
              NomTittle.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
@@ -200,6 +200,35 @@ public class EditEmploye extends JFrame {
             });
             EmployeEditPanel.add(ChangeDATED);
             ChangeDATED.setBounds(550, 394, 190, 40);
+            
+            
+            JTextField EnterMDP = new JTextField("Entrez la date de départ");
+            EnterMDP.setBackground(new java.awt.Color(204, 204, 204));
+            EnterMDP.setForeground(new java.awt.Color(56, 56, 56));
+            EnterMDP.setText("Entrez la mot de passe");
+            EnterMDP.setToolTipText("");
+            EnterMDP.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(56, 56, 56), 1, true));
+            EnterMDP.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    
+                }
+            });
+            EmployeEditPanel.add(EnterMDP);
+            EnterMDP.setBounds(240, 464, 310, 40);
+            
+            JButton ChangeMDP = new JButton("CHANGER LE MOT DE PASSE");
+            ChangeMDP.setBackground(new java.awt.Color(202, 178, 92));
+            ChangeMDP.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+            ChangeMDP.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                	String pa = EnterMDP.getText();
+                    employe.setPassword(pa);
+                	 AjoutNotif.EModif();
+                }
+            });
+            EmployeEditPanel.add(ChangeMDP);
+            ChangeMDP.setBounds(550, 464, 190, 40);
+            
             
             
             

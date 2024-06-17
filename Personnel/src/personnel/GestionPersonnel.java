@@ -49,7 +49,6 @@ public class GestionPersonnel implements Serializable
 			throw new RuntimeException("Vous ne pouvez créer qu'une seuls instance de cet objet.");
 		ligues = new TreeSet<>();
 		gestionPersonnel = this;
-        gestionPersonnel.addRoot("root", "root", "root", "root", LocalDate.now(), LocalDate.now());
 		
 	}
 	

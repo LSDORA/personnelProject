@@ -65,7 +65,11 @@ public class Employe implements Serializable, Comparable<Employe>
     public String getPassword() {
         return password;
     }
-  
+    public boolean checkPassword(String password)
+	{
+    	 return this.password.equals(PasswordUtil.hashPassword(password));
+	}
+
 	/**
 	 * Retourne vrai ssi l'employé est le root.
 	 * @return vrai ssi l'employé est le root.
@@ -165,27 +169,21 @@ public class Employe implements Serializable, Comparable<Employe>
 	 * @param password le password auquel comparer celui de l'employé.
 	 */
 	
-	public boolean checkPassword(String password)
-	{
-		return this.password.equals(password);
-	}
-
+	
 	/**
 	 * Change le password de l'employé.
 	 * @param password le nouveau password de l'employé. 
 	 * @throws SauvegardeImpossible 
 	 */
 	
-	public void setPassword(String password) 
-	{
-		this.password= password;
-		try {
-			gestionPersonnel.update(this);
-		} catch (SauvegardeImpossible e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	 public void setPassword(String password) {
+	        this.password = PasswordUtil.hashPassword(password);
+	        try {
+	            gestionPersonnel.update(this);
+	        } catch (SauvegardeImpossible e) {
+	            e.printStackTrace();
+	        }
+	    }
 
 	/**
 	 * Retourne la ligue à laquelle l'employé est affecté.

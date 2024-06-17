@@ -25,6 +25,7 @@ import commandLine.LigueConsole;
 import personnel.Employe;
 import personnel.GestionPersonnel;
 import personnel.Ligue;
+import personnel.PasswordUtil;
 import personnel.SauvegardeImpossible;
 import commandLine.PersonnelConsole;
 
@@ -141,8 +142,10 @@ public class PersonnelGUI extends JFrame {
 
         jButton1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String password = jTextField2.getText();
+                String password = PasswordUtil.hashPassword(jTextField2.getText());
                 String email = jTextField1.getText();
+                
+                
                 
 
                 Employe employe = verifierIdentifiants(email, password);
@@ -226,122 +229,118 @@ public class PersonnelGUI extends JFrame {
 
     }
     
-    private void compte(Employe employe,Ligue ligue) {
-    	getContentPane().removeAll();
-    	JPanel compte = new JPanel();
-    	
-    	 JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
-         JTable jTable1 = new javax.swing.JTable();
-         jLabel1 = new javax.swing.JLabel();
-         jLabel3 = new javax.swing.JLabel();
-         jLabel4 = new javax.swing.JLabel();
-         jButton3 = new javax.swing.JButton();
-         jButton1 = new javax.swing.JButton();
-         jButton2 = new javax.swing.JButton();
-         jLabel5 = new javax.swing.JLabel();
+    private void compte(Employe employe) {
+        getContentPane().removeAll();
+        JPanel compte = new JPanel();
+        
+        JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
+        JTable jTable1 = new javax.swing.JTable();
+        JLabel jLabel1 = new JLabel();
+        JLabel jLabel3 = new JLabel();
+        JLabel jLabel4 = new JLabel();
+        JButton jButton3 = new JButton();
+        JButton jButton1 = new JButton();
+        JButton jButton2 = new JButton();
+        JLabel jLabel5 = new JLabel();
 
-         setPreferredSize(new java.awt.Dimension(1000, 550));
-         compte.setLayout(null);
+        setPreferredSize(new java.awt.Dimension(1000, 550));
+        compte.setLayout(null);
 
+        // Récupérer la ligue de l'employé
+        Ligue ligue = employe.getLigue();
 
-         Set<Ligue> liguesSet = gestionPersonnel.getLigues();
-         List<Ligue> liguesList = new ArrayList<>();
-         List<Employe> employesList = new ArrayList<>();
+        // Récupérer les employés de cette ligue
+        List<Employe> employesList = new ArrayList<>(ligue.getEmployes());
 
-         for (Ligue ligue1 : liguesSet) {
-             for (Employe employe1 : ligue1.getEmployes()) {
-                 liguesList.add(ligue1);
-                 employesList.add(employe1);
-             }
-         }
+        String[] columnNames = {"Nom", "Prenom", "Mail"};
+        Object[][] data = new Object[employesList.size()][3];
 
-         String[] columnNames = {"Nom", "Prenom", "Mail", "Action"};
-         Object[][] data = new Object[employesList.size()][3];
+        for (int i = 0; i < employesList.size(); i++) {
+            Employe emp = employesList.get(i);
+            data[i][0] = emp.getNom();
+            data[i][1] = emp.getPrenom();
+            data[i][2] = emp.getMail();
+            // Juste un exemple, vous pouvez ajouter des boutons ou d'autres éléments ici
+        }
 
-         for (int i = 0; i < employesList.size(); i++) {
-             Employe employe1 = employesList.get(i);
-             data[i][0] = employe1.getNom();
-             data[i][1] = employe1.getPrenom();
-             data[i][2] = employe1.getMail();
-             
-         }
-         
-         jTable1.setFocusable(false);
-         jTable1.setGridColor(new java.awt.Color(204, 204, 0));
-         jTable1.setRequestFocusEnabled(false);
-         jTable1.setRowSelectionAllowed(false);
-         jTable1.setVerifyInputWhenFocusTarget(false);
-         jScrollPane1.setViewportView(jTable1);
+        // Créer le modèle de table
+        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(data, columnNames);
+        jTable1.setModel(model);
 
-         compte.add(jScrollPane1);
-         jScrollPane1.setBounds(50, 150, 640, 340);
+        jTable1.setFocusable(false);
+        jTable1.setGridColor(new java.awt.Color(204, 204, 0));
+        jTable1.setRequestFocusEnabled(false);
+        jTable1.setRowSelectionAllowed(false);
+        jTable1.setVerifyInputWhenFocusTarget(false);
+        jScrollPane1.setViewportView(jTable1);
 
-         jLabel1.setBackground(new java.awt.Color(56, 56, 56));
-         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-         jLabel1.setForeground(new java.awt.Color(202, 178, 92));
-         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-         jLabel1.setText("ADMIN DE LA LIGUE :  nom: "+ligue.getAdministrateur().getNom()+"   prenom: "+ligue.getAdministrateur().getPrenom()+"   mail: "+ligue.getAdministrateur().getMail());
-         jLabel1.setOpaque(true);
-         compte.add(jLabel1);
-         jLabel1.setBounds(0, 0, 860, 70);
+        compte.add(jScrollPane1);
+        jScrollPane1.setBounds(50, 150, 640, 340);
 
-         jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-         jLabel3.setText("MEMBRE DE MA LIGUE :");
-         compte.add(jLabel3);
-         jLabel3.setBounds(50, 90, 450, 50);
+        jLabel1.setBackground(new java.awt.Color(56, 56, 56));
+        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(202, 178, 92));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("ADMIN DE LA LIGUE :  nom: " + ligue.getAdministrateur().getNom() + "   prenom: " + ligue.getAdministrateur().getPrenom() + "   mail: " + ligue.getAdministrateur().getMail());
+        jLabel1.setOpaque(true);
+        compte.add(jLabel1);
+        jLabel1.setBounds(0, 0, 860, 70);
 
-         jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-         jLabel4.setText("CHANGER SON MOT DE PASSE");
-         compte.add(jLabel4);
-         jLabel4.setBounds(710, 170, 280, 50);
+        jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel3.setText("MEMBRE DE MA LIGUE :");
+        compte.add(jLabel3);
+        jLabel3.setBounds(50, 90, 450, 50);
 
-         jButton3.setBackground(new java.awt.Color(56, 56, 56));
-         jButton3.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-         jButton3.setForeground(new java.awt.Color(202, 178, 92));
-         jButton3.setText("QUITTER");
-         jButton3.setBorder(null);
-         jButton3.addActionListener(new java.awt.event.ActionListener() {
-             public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel4.setText("CHANGER SON MOT DE PASSE");
+        compte.add(jLabel4);
+        jLabel4.setBounds(710, 170, 280, 50);
+
+        jButton3.setBackground(new java.awt.Color(56, 56, 56));
+        jButton3.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(202, 178, 92));
+        jButton3.setText("QUITTER");
+        jButton3.setBorder(null);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 afficheRootPanel(employe);
-             }
-         });
-         compte.add(jButton3);
-         jButton3.setBounds(853, 0, 150, 70);
+            }
+        });
+        compte.add(jButton3);
+        jButton3.setBounds(853, 0, 150, 70);
 
-         jButton1.setBackground(new java.awt.Color(202, 178, 92));
-         jButton1.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-         jButton1.setText("CHANGER");
-         jButton1.addActionListener(new java.awt.event.ActionListener() {
-             public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton1.setBackground(new java.awt.Color(202, 178, 92));
+        jButton1.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        jButton1.setText("CHANGER");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 
-             }
-         });
-         compte.add(jButton1);
-         jButton1.setBounds(720, 230, 250, 40);
+            }
+        });
+        compte.add(jButton1);
+        jButton1.setBounds(720, 230, 250, 40);
 
-         jButton2.setBackground(new java.awt.Color(202, 178, 92));
-         jButton2.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-         jButton2.setText("CHANGER");
-         jButton2.addActionListener(new java.awt.event.ActionListener() {
-             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                 
-             }
-         });
-         compte.add(jButton2);
-         jButton2.setBounds(720, 380, 250, 40);
+        jButton2.setBackground(new java.awt.Color(202, 178, 92));
+        jButton2.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        jButton2.setText("CHANGER");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });
+        compte.add(jButton2);
+        jButton2.setBounds(720, 380, 250, 40);
 
-         jLabel5.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-         jLabel5.setText("CHANGER SON ADRESSE MAIL");
-         compte.add(jLabel5);
-         jLabel5.setBounds(710, 320, 280, 50);
-    
-    	
-    	getContentPane().add(compte);
-    	revalidate();
-    	pack();
-    	
-    	
+        jLabel5.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel5.setText("CHANGER SON ADRESSE MAIL");
+        compte.add(jLabel5);
+        jLabel5.setBounds(710, 320, 280, 50);
+
+        getContentPane().add(compte);
+        revalidate();
+        pack();
     }
+
 
     private void afficheRootPanel(Employe employe) {
         getContentPane().removeAll(); // Supprime tous les composants existants
@@ -358,7 +357,7 @@ public class PersonnelGUI extends JFrame {
         consulterButton.setBorder(null);
         consulterButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-           compte(employe,employe.getLigue());           }
+           compte(employe);           }
         });
         consulterButton.setEnabled(false);
         rootPanel.add(consulterButton);
@@ -411,7 +410,8 @@ public class PersonnelGUI extends JFrame {
             }
         });
         
-        Ligue ligue = employe.getLigue();
+        if(employe != null) {     
+        	Ligue ligue = employe.getLigue();
      
 		if(!employe.estRoot()) {
         	gererRootButton.setEnabled(false);
@@ -424,7 +424,7 @@ public class PersonnelGUI extends JFrame {
 	        	System.out.println("je suis admin");
 	        	gererButton.setEnabled(true);}
 			consulterButton.setEnabled(true);
-		}
+		}}
 		
 	
    
@@ -508,7 +508,7 @@ public class PersonnelGUI extends JFrame {
         Selectligue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	 
-					selectLigue();
+					selectLigue(employe);
 					rootPanel.setVisible(true);
 				
             	 
@@ -582,7 +582,7 @@ public class PersonnelGUI extends JFrame {
         repaint(); // Redessiner le frame
     }
     
-    private void selectLigue() {
+    private void selectLigue(Employe employe) {
         getContentPane().removeAll(); // Supprime tous les composants existants
 
         JPanel liguePanel = new JPanel();
@@ -597,7 +597,7 @@ public class PersonnelGUI extends JFrame {
         Quitter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 liguePanel.setVisible(false);
-                afficheRootPanell(employe);
+                afficheRootPanel(employe);
             }
         });
         liguePanel.add(Quitter);
@@ -614,7 +614,7 @@ public class PersonnelGUI extends JFrame {
         for (int i = 0; i < liguesList.size(); i++) {
             Ligue ligue = liguesList.get(i);
             data[i][0] = ligue.getNom();
-            data[i][1] = "Séléctionner la ligue"; // Ce texte sera remplacé par le bouton
+            data[i][1] = "Sélectionner la ligue"; // Ce texte sera remplacé par le bouton
         }
 
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
@@ -628,7 +628,7 @@ public class PersonnelGUI extends JFrame {
 
         // Personnaliser le rendu des cellules pour afficher des boutons
         ligueTable.getColumn("Action").setCellRenderer(new ButtonRenderer());
-        ligueTable.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox(), liguesList));
+        ligueTable.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox(), liguesList, employe));
 
         JScrollPane liguesScrollPane = new JScrollPane(ligueTable);
         liguePanel.add(liguesScrollPane);
@@ -639,6 +639,7 @@ public class PersonnelGUI extends JFrame {
         repaint(); // Redessiner le frame
     }
 
+
     // Classe pour rendre les boutons dans les cellules du tableau
 
     // Classe pour éditer les cellules du tableau en tant que boutons
@@ -646,10 +647,12 @@ public class PersonnelGUI extends JFrame {
         private String label;
         private boolean isPushed;
         private List<Ligue> liguesList;
+		private Employe employe;
 
-        public ButtonEditor(JCheckBox checkBox, List<Ligue> liguesList) {
+        public ButtonEditor(JCheckBox checkBox, List<Ligue> liguesList,Employe employe) {
             super(checkBox);
             this.liguesList = liguesList;
+            this.employe = employe;
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
@@ -660,7 +663,7 @@ public class PersonnelGUI extends JFrame {
                     fireEditingStopped();
                     // Action à effectuer lorsque le bouton est cliqué
                     Ligue ligue = liguesList.get(row);
-                    liguePanel(ligue);
+                    liguePanel(ligue,employe);
                     
                 }
             });
@@ -698,29 +701,29 @@ public class PersonnelGUI extends JFrame {
         private String label;
         private boolean isPushed;
         private List<Employe> employesList;
-        private List<Ligue> liguesList;
+        private Ligue ligue; // Ajout d'une référence à la ligue spécifique
 
-        public ButtonEditore(JCheckBox checkBox, List<Ligue> liguesList, List<Employe> employesList) {
+        public ButtonEditore(JCheckBox checkBox, List<Employe> employesList, Ligue ligue) {
             super(checkBox);
-            this.liguesList = liguesList;
             this.employesList = employesList;
+            this.ligue = ligue; // Initialise la ligue spécifique
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             label = (value == null) ? "" : value.toString();
             JButton button = new JButton(label);
-            button.setBackground(new java.awt.Color(56, 56, 56));
-            button.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-            button.setForeground(new java.awt.Color(202, 178, 92));
-       
+            button.setBackground(new Color(56, 56, 56));
+            button.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
+            button.setForeground(new Color(202, 178, 92));
             button.setBorder(null);
+            
             button.addActionListener(e -> {
                 fireEditingStopped();
                 // Action à effectuer lorsque le bouton est cliqué
-                Employe employe = employesList.get(row);
-                Ligue ligue = liguesList.get(row);
-                unemploye(ligue, employe);
+                Employe employe = employesList.get(row); // Récupère l'employé à partir de la liste spécifique à la ligue
+                unemploye(ligue, employe); // Appelle la méthode unemploye avec la ligue et l'employé spécifiques
             });
+            
             return button;
         }
 
@@ -738,7 +741,8 @@ public class PersonnelGUI extends JFrame {
         }
     }
 
-    private void selectEmp(Ligue ligue) {
+
+    private void selectEmp(Ligue ligue, Employe employe) {
         getContentPane().removeAll();
 
         JPanel selemp = new JPanel();
@@ -747,7 +751,6 @@ public class PersonnelGUI extends JFrame {
         JScrollPane jScrollPane1;
         JTable ligueTable;
 
-     
         selemp.setLayout(null);
 
         jButton1 = new JButton();
@@ -758,37 +761,28 @@ public class PersonnelGUI extends JFrame {
         jButton1.setText("QUITTER");
         jButton1.setHorizontalAlignment(SwingConstants.RIGHT);
         jButton1.addActionListener(evt -> {
-            liguePanel(ligue);
+            liguePanel(ligue, employe);
             selemp.setVisible(false);
         });
         selemp.add(jButton1);
-        jButton1.setBounds(-7, 0, 1000, 71);
+        jButton1.setBounds(-7, 0, 990, 71);
 
         jLabel2 = new JLabel();
         jLabel2.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
-        jLabel2.setText("SELECTIONNER UN EMPLOYER");
+        jLabel2.setText("SELECTIONNER UN EMPLOYE");
         selemp.add(jLabel2);
         jLabel2.setBounds(170, 100, 450, 50);
 
-        Set<Ligue> liguesSet = gestionPersonnel.getLigues();
-        List<Ligue> liguesList = new ArrayList<>();
-        List<Employe> employesList = new ArrayList<>();
-
-        for (Ligue ligue1 : liguesSet) {
-            for (Employe employe : ligue1.getEmployes()) {
-                liguesList.add(ligue1);
-                employesList.add(employe);
-            }
-        }
+        List<Employe> employesList = new ArrayList<>(ligue.getEmployes()); // Récupère uniquement les employés de la ligue spécifiée
 
         String[] columnNames = {"Nom", "Prenom", "Mail", "Action"};
         Object[][] data = new Object[employesList.size()][4];
 
         for (int i = 0; i < employesList.size(); i++) {
-            Employe employe = employesList.get(i);
-            data[i][0] = employe.getNom();
-            data[i][1] = employe.getPrenom();
-            data[i][2] = employe.getMail();
+            Employe employe4 = employesList.get(i);
+            data[i][0] = employe4.getNom();
+            data[i][1] = employe4.getPrenom();
+            data[i][2] = employe4.getMail();
             data[i][3] = "Sélectionner l'employé"; // Texte pour le bouton
         }
 
@@ -801,7 +795,7 @@ public class PersonnelGUI extends JFrame {
 
         ligueTable = new JTable(tableModel);
         ligueTable.getColumn("Action").setCellRenderer(new ButtonRenderer());
-        ligueTable.getColumn("Action").setCellEditor(new ButtonEditore(new JCheckBox(), liguesList, employesList));
+        ligueTable.getColumn("Action").setCellEditor(new ButtonEditore(new JCheckBox(),employesList , ligue));
 
         jScrollPane1 = new JScrollPane(ligueTable);
         selemp.add(jScrollPane1);
@@ -813,8 +807,9 @@ public class PersonnelGUI extends JFrame {
     }
 
 
+
     
-    private void liguePanel(Ligue ligue) {
+    private void liguePanel(Ligue ligue, Employe employe) {
         getContentPane().removeAll(); // Supprime tous les composants existants
 
         JPanel liguePanelde = new JPanel();
@@ -828,7 +823,7 @@ public class PersonnelGUI extends JFrame {
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    selectLigue();
+                    selectLigue(employe);
                 } catch (Exception e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Une erreur est survenue: " + e.getMessage());
@@ -845,6 +840,17 @@ public class PersonnelGUI extends JFrame {
         jButton4.setBorder(null);
         liguePanelde.add(jButton4);
         jButton4.setBounds(100, 0, 200, 70);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                	 AffichL affi = new AffichL(employe,ligue);
+                	 affi.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Une erreur est survenue: " + e.getMessage());
+                }
+            }
+        });
 
         JButton jButton5 = new JButton("RENOMMER");
         jButton5.setBackground(new java.awt.Color(56, 56, 56));
@@ -906,20 +912,28 @@ public class PersonnelGUI extends JFrame {
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                	 employePanel(ligue);
+                	 employePanel(ligue,employe);
                 } catch (Exception e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Une erreur est survenue: " + e.getMessage());
                 }
             }
         });
+        
+        if(employe!=null) {
+        	if(!employe.estRoot() && !employe.estAdmin(ligue)) {
+            	jButton7.setEnabled(false);
+            	jButton6.setEnabled(false);
+            	jButton5.setEnabled(false);
+            }
+        }
 
         getContentPane().add(liguePanelde);
         revalidate(); // Revalider le contenu du frame
         repaint(); // Redessiner le frame
     }
     
-    private void employePanel(Ligue ligue) {
+    private void employePanel(Ligue ligue,Employe employe) {
         getContentPane().removeAll(); // Supprime tous les composants existants
 
         JPanel employeP = new JPanel();
@@ -946,7 +960,7 @@ public class PersonnelGUI extends JFrame {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                	 liguePanel(ligue);
+                	 liguePanel(ligue,employe);
                 	 employeP.setVisible(false);
                 	 
                 	
@@ -1012,7 +1026,7 @@ public class PersonnelGUI extends JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                 
-                	 selectEmp(ligue);
+                	 selectEmp(ligue,employe);
                      employeP.setVisible(false);
                 	 
                 } catch (Exception e) {
@@ -1053,7 +1067,7 @@ public class PersonnelGUI extends JFrame {
            jButton3.setBorder(null);
            jButton3.addActionListener(new java.awt.event.ActionListener() {
                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                          selectEmp(ligue);
+                          selectEmp(ligue,employe);
                }
            });
            unemployepanel.add(jButton3);
@@ -1271,7 +1285,7 @@ public class PersonnelGUI extends JFrame {
         ChangeMDP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	 String ma = EnterMDP.getText();
-                 employe.setMail(ma);
+                 employe.setPassword(ma);
                  AjoutNotif.EModif();
             }
         });
@@ -1356,11 +1370,11 @@ public class PersonnelGUI extends JFrame {
 	}
 
     private boolean verifiePassword(String password) {
-        Employe root = gestionPersonnel.getRoot();
+        Employe employe = gestionPersonnel.getRoot();
        // Vérifie si l'employé est le root (par exemple, vérifie son email)
 
-        if (root != null) {
-            boolean ok = root.getPassword().equals(password);
+        if (employe != null) {
+            boolean ok = employe.getPassword().equals(password);
             if (!ok) {
                 System.out.println("Password incorrect pour le root.");
             }
