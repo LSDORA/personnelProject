@@ -1,7 +1,10 @@
 package commandLine;
 
+import java.util.Scanner;
 import personnel.*;
 import commandLineMenus.*;
+import interfaceGraphique.PersonnelInterface;
+
 import static commandLineMenus.rendering.examples.util.InOut.*;
 
 public class PersonnelConsole
@@ -73,7 +76,44 @@ public class PersonnelConsole
 	
 	public static void main(String[] args)
 	{
-		PersonnelConsole personnelConsole;
+		Scanner sc = new Scanner(System.in);
+
+        System.out.println("Bienvenue dans MDL application !");
+        System.out.println("Veuillez choisir le mode de lancement :");
+        System.out.println("1. Mode ligne de commande");
+        System.out.println("2. Mode graphique");
+        System.out.print("Entrez 1 ou 2 : ");
+
+        int choix = sc.nextInt();
+
+        if (choix == 1) {
+            // Lancer le mode ligne de commande
+            System.out.println("Mode ligne de commande sélectionné !\n");
+            // Ajoutez ici la logique pour le mode ligne de commande
+            
+            PersonnelConsole personnelConsole;
+    		
+    		try {
+    			personnelConsole = new PersonnelConsole(GestionPersonnel.getGestionPersonnel());
+    			if (personnelConsole.verifiePassword())
+    				personnelConsole.start();
+    		} catch (SauvegardeImpossible e) {
+    			System.out.println("Impossible de se connecter à la base de donnée");
+    			e.printStackTrace();
+    		}
+            
+        } else if (choix == 2) {
+            // Lancer le mode graphique
+            System.out.println("Mode graphique sélectionné !\n");
+            // Ajoutez ici la logique pour le mode graphique
+            
+            PersonnelInterface.main(args);
+            
+        } else {
+            System.out.println("Choix invalide.\n Redémarer l'app et choisir l'option 1 Veuillez entrer 1 ou 2.");
+        }
+		/*PersonnelConsole personnelConsole;
+		
 		try {
 			personnelConsole = new PersonnelConsole(GestionPersonnel.getGestionPersonnel());
 			if (personnelConsole.verifiePassword())
@@ -81,7 +121,7 @@ public class PersonnelConsole
 		} catch (SauvegardeImpossible e) {
 			System.out.println("Impossible de se connecter à la base de donnée");
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 }
