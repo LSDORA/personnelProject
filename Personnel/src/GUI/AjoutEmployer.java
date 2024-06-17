@@ -52,7 +52,7 @@ public class AjoutEmployer extends JFrame {
 	        JTextField jTextField6 = new javax.swing.JTextField();
 	        JLabel jLabel7 = new javax.swing.JLabel();
 
-	        setPreferredSize(new java.awt.Dimension(700, 300));
+	        setPreferredSize(new java.awt.Dimension(700, 400));
 	        addem.setLayout(null);
 
 	        jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N

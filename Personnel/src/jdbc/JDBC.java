@@ -86,7 +86,7 @@ public class JDBC implements Passerelle
 	                Employe employe = ligue.addEmploye(nomEmploye, prenomEmploye, mailEmploye, passwordEmploye, dateArrive, dateDepart, id);
 	                System.out.println("    Employé ajouté : " + nomEmploye + " " + prenomEmploye);
 	            }
-
+                     
 	            // Vérification de l'administrateur de la ligue
 	            String requeteAdmin = "SELECT ADMIN_LIGUE FROM ligue WHERE id_ligue =" + idLigue;
 	            Statement instructionAdmin = connection.createStatement();
@@ -180,33 +180,43 @@ public class JDBC implements Passerelle
 			throw new SauvegardeImpossible(exception);
 		}		
 	}
+	
+	private boolean employeExists(String email) throws SQLException {
+	    PreparedStatement stmt = connection.prepareStatement("SELECT COUNT(*) FROM employe WHERE mail = ?");
+	    stmt.setString(1, email);
+	    ResultSet rs = stmt.executeQuery();
+	    rs.next();
+	    int count = rs.getInt(1);
+	    return count > 0;
+	}
+	
 	@Override
 	public int insert(Employe employe) throws SauvegardeImpossible {
 	    try {
+	    	
+	    	if (employeExists(employe.getMail())) {
+	    		return 0;
+	        }
+	    	
 	        PreparedStatement instruction;
 	        if (employe.getLigue() != null) {
 	            instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, ligue, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 	            instruction.setString(1, employe.getNom());
-		        instruction.setString(2, employe.getPrenom());
-		        instruction.setString(3, employe.getMail());
-		        instruction.setString(4, employe.getPassword());
+	            instruction.setString(2, employe.getPrenom());
+	            instruction.setString(3, employe.getMail());
+	            instruction.setString(4, employe.getPassword());
 	            instruction.setInt(5, employe.getLigue().getId());
 	            instruction.setDate(6, java.sql.Date.valueOf(employe.getdatearrive()));
-		        instruction.setDate(7, java.sql.Date.valueOf(employe.getdatedepart()));
+	            instruction.setDate(7, java.sql.Date.valueOf(employe.getdatedepart()));
 	        } else {
-	        	  if ("root".equals(employe.getNom())) {
-	        		  return -1;
-	              } else {
-	            	  instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-	                  instruction.setString(1, employe.getNom());
-	                  instruction.setString(2, employe.getPrenom());
-	                  instruction.setString(3, employe.getMail());
-	                  instruction.setString(4, employe.getPassword());
-	                  instruction.setDate(5, java.sql.Date.valueOf(employe.getdatearrive()));
-	                  instruction.setDate(6, java.sql.Date.valueOf(employe.getdatedepart()));
-	              }
+	            instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+	            instruction.setString(1, employe.getNom());
+	            instruction.setString(2, employe.getPrenom());
+	            instruction.setString(3, employe.getMail());
+	            instruction.setString(4, employe.getPassword());
+	            instruction.setDate(5, java.sql.Date.valueOf(employe.getdatearrive()));
+	            instruction.setDate(6, java.sql.Date.valueOf(employe.getdatedepart()));
 	        }
-
 	     
 	        instruction.executeUpdate(); // Execute the update after setting all parameters
 

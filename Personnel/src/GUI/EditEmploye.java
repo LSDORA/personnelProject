@@ -87,7 +87,7 @@ public class EditEmploye extends JFrame {
             ChangeName.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                 	 String na = EnterName.getText();
-                     employe.setNom(na);
+                     employe.setNom(na); AjoutNotif.EModif();
                 }
             });
             EmployeEditPanel.add(ChangeName);
@@ -116,7 +116,7 @@ public class EditEmploye extends JFrame {
             ChangePrename.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                 	 String pna = EnterPrename.getText();
-                     employe.setPrenom(pna);
+                     employe.setPrenom(pna); AjoutNotif.EModif();
                 }
             });
             EmployeEditPanel.add(ChangePrename);

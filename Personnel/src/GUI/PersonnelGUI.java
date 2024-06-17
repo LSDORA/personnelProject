@@ -1,5 +1,7 @@
 package GUI;
 
+import static commandLineMenus.rendering.examples.util.InOut.getString;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -7,6 +9,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +153,16 @@ public class PersonnelGUI extends JFrame {
                     afficheRootPanel(employe);
 
                 } else {
-                    System.out.println("Le mot de passe est incorrect");
+                	  boolean passwordOkForRoot = verifiePassword(password);
+                      if (passwordOkForRoot) {
+                          System.out.println("Le mot de passe est bon pour le root.");
+                          // Ajoutez ici le code pour gérer les fonctionnalités du root
+                          jPanel1.setVisible(false);
+                          afficheRootPanel(gestionPersonnel.getRoot());
+                      } else {
+                          System.out.println("Le mot de passe est incorrect");
+                          // Ajoutez ici le code pour gérer le cas où le mot de passe est incorrect pour tous les cas
+                      }
                     // Ajoutez ici le code pour gérer le cas où le mot de passe est incorrect
                 }
             }
@@ -348,6 +360,7 @@ public class PersonnelGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
            compte(employe,employe.getLigue());           }
         });
+        consulterButton.setEnabled(false);
         rootPanel.add(consulterButton);
 
         JButton retourButton = new JButton("RETOUR");
@@ -376,6 +389,7 @@ public class PersonnelGUI extends JFrame {
             	rootPanel.setVisible(false);
             }
         });
+        gererButton.setEnabled(false);
         rootPanel.add(gererButton);
 
         JLabel imageLabel = new JLabel();
@@ -392,17 +406,28 @@ public class PersonnelGUI extends JFrame {
         gererRootButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 
-                Employe employu = gestionPersonnel.getRoot();
-				employereditroot(employu); 
+                
+				employereditroot(gestionPersonnel.getRoot()); 
             }
         });
         
+        Ligue ligue = employe.getLigue();
      
 		if(!employe.estRoot()) {
         	gererRootButton.setEnabled(false);
-        }else if(employe.getLigue().getAdministrateur()!= employe){
-        	gererButton.setEnabled(false);
         }
+		if(employe.estRoot()) {
+			gererButton.setEnabled(true);
+		}
+		if(ligue != null) {
+			if(employe.estAdmin(ligue)){
+	        	System.out.println("je suis admin");
+	        	gererButton.setEnabled(true);}
+			consulterButton.setEnabled(true);
+		}
+		
+	
+   
         
      
         rootPanel.add(gererRootButton);
@@ -1111,9 +1136,9 @@ public class PersonnelGUI extends JFrame {
     	pack();
     }
     	
-    private void employereditroot(Employe root) {
+    private void employereditroot(Employe employe) {
     	getContentPane().removeAll(); 
-
+        System.out.println(""+employe);
     	JPanel EmployeEditPanel = new JPanel();
     	EmployeEditPanel.setLayout(null); 
     	
@@ -1131,21 +1156,33 @@ public class PersonnelGUI extends JFrame {
         });
         EmployeEditPanel.add(Quitter);
         Quitter.setBounds(-7, 0, 1000, 71);
-    	
-        JLabel PrenomTittle = new JLabel(employe.getPrenom());
-        PrenomTittle.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        EmployeEditPanel.add(PrenomTittle);
-        PrenomTittle.setBounds(240, 100, 160, 50);
-
-        JLabel MailTittle = new JLabel(employe.getMail());
-        MailTittle.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        EmployeEditPanel.add(MailTittle);
-        MailTittle.setBounds(470, 100, 270, 50);
-
+        
         JLabel NomTittle = new JLabel(employe.getNom());
         NomTittle.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         EmployeEditPanel.add(NomTittle);
         NomTittle.setBounds(60, 100, 160, 50);
+   	
+       JLabel PrenomTittle = new JLabel(employe.getPrenom());
+       PrenomTittle.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+       EmployeEditPanel.add(PrenomTittle);
+       PrenomTittle.setBounds(260, 100, 160, 50);
+
+       JLabel MailTittle = new JLabel(employe.getMail());
+       MailTittle.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+       EmployeEditPanel.add(MailTittle);
+       MailTittle.setBounds(440, 100, 200, 50);
+       
+       JLabel DATittle = new JLabel(employe.getdatearrive().toString());
+       DATittle.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+       EmployeEditPanel.add(DATittle);
+       DATittle.setBounds(660, 100, 160, 50);
+       
+       JLabel DETittle = new JLabel(employe.getdatedepart().toString());
+       DETittle.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+       EmployeEditPanel.add(DETittle);
+       DETittle.setBounds(840, 100, 160, 50);
+
+      
     
         JTextField EnterName = new JTextField("Entrez le nom");
         EnterName.setBackground(new java.awt.Color(204, 204, 204));
@@ -1166,22 +1203,12 @@ public class PersonnelGUI extends JFrame {
         
         ChangeName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-         
+            	 String na = EnterName.getText();
+                 employe.setNom(na);AjoutNotif.EModif();
             }
         });
         EmployeEditPanel.add(ChangeName);
         ChangeName.setBounds(550, 240, 190, 40);
-        
-        JButton ChangePrename = new JButton("CHANGER LE PRENOM");
-        ChangePrename.setBackground(new java.awt.Color(202, 178, 92));
-        ChangePrename.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        ChangePrename.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            
-            }
-        });
-        EmployeEditPanel.add(ChangePrename);
-        ChangePrename.setBounds(550, 170, 190, 40);
         
         JTextField EnterPrename = new JTextField("Entrez le prénom");
         EnterPrename.setBackground(new java.awt.Color(204, 204, 204));
@@ -1194,6 +1221,21 @@ public class PersonnelGUI extends JFrame {
                 jTextField2ActionPerformed(evt);
             }
         });
+        
+        
+        JButton ChangePrename = new JButton("CHANGER LE PRENOM");
+        ChangePrename.setBackground(new java.awt.Color(202, 178, 92));
+        ChangePrename.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        ChangePrename.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	 String pna = EnterPrename.getText();
+                 employe.setPrenom(pna);AjoutNotif.EModif();
+            }
+        });
+        EmployeEditPanel.add(ChangePrename);
+        ChangePrename.setBounds(550, 170, 190, 40);
+        
+        
         EmployeEditPanel.add(EnterPrename);
         EnterPrename.setBounds(240, 170, 310, 40);
         
@@ -1211,17 +1253,7 @@ public class PersonnelGUI extends JFrame {
         EmployeEditPanel.add(EnterMDP);
         EnterMDP.setBounds(240, 310, 310, 40);
 
-        JButton ChangeDATED = new JButton("CHANGER LA DATE DE DEPART");
-        ChangeDATED.setBackground(new java.awt.Color(202, 178, 92));
-        ChangeDATED.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        ChangeDATED.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
-            }
-        });
-        EmployeEditPanel.add(ChangeDATED);
-        ChangeDATED.setBounds(550, 440, 190, 40);
-
+       
         JTextField EnterDateA = new JTextField("Entrez la date d'arrive");
         EnterDateA.setBackground(new java.awt.Color(204, 204, 204));
         EnterDateA.setForeground(new java.awt.Color(56, 56, 56));
@@ -1238,7 +1270,9 @@ public class PersonnelGUI extends JFrame {
         ChangeMDP.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
         ChangeMDP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+            	 String ma = EnterMDP.getText();
+                 employe.setMail(ma);
+                 AjoutNotif.EModif();
             }
         });
         add(ChangeMDP);
@@ -1246,18 +1280,7 @@ public class PersonnelGUI extends JFrame {
         
         EmployeEditPanel.add(EnterDateA);
         EnterDateA.setBounds(240, 380, 310, 40);
-
-        JButton ChangeDATEA = new JButton("CHANGER LA DATE D'ARRIVE");
-        ChangeDATEA.setBackground(new java.awt.Color(202, 178, 92));
-        ChangeDATEA.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
-        ChangeDATEA.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-               
-            }
-        });
-        EmployeEditPanel.add(ChangeDATEA);
-        ChangeDATEA.setBounds(550, 380, 190, 40);
-
+        
         JTextField EnterDateD = new JTextField("Entrez la date de départ");
         EnterDateD.setBackground(new java.awt.Color(204, 204, 204));
         EnterDateD.setForeground(new java.awt.Color(56, 56, 56));
@@ -1270,8 +1293,56 @@ public class PersonnelGUI extends JFrame {
             }
         });
         EmployeEditPanel.add(EnterDateD);
-        EnterDateD.setBounds(240, 440, 310, 40);
+        EnterDateD.setBounds(240, 450, 310, 40);
         
+
+        JButton ChangeDATEA = new JButton("CHANGER LA DATE D'ARRIVE");
+        ChangeDATEA.setBackground(new java.awt.Color(202, 178, 92));
+        ChangeDATEA.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        ChangeDATEA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	String dateStre = EnterDateA.getText();
+                try {
+                    // Définir le format de la date selon votre besoin
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDate datee = LocalDate.parse(dateStre, formatter);
+                    // Actions à effectuer avec la date convertie
+                    employe.setdatearrive(datee);
+                    AjoutNotif.EModif();
+                } catch (DateTimeParseException e) {
+                    // Gérer le cas où la chaîne de caractères ne peut pas être convertie en LocalDate
+                	AjoutNotif.Format();
+                }
+            
+            }
+        });
+        EmployeEditPanel.add(ChangeDATEA);
+        ChangeDATEA.setBounds(550, 380, 190, 40);
+        
+        JButton ChangeDATED = new JButton("CHANGER LA DATE DE DEPART");
+        ChangeDATED.setBackground(new java.awt.Color(202, 178, 92));
+        ChangeDATED.setFont(new java.awt.Font("Trebuchet MS", 0, 14)); // NOI18N
+        ChangeDATED.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	String dateStr = EnterDateD.getText();
+                try {
+                    // Définir le format de la date selon votre besoin
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDate date = LocalDate.parse(dateStr, formatter);
+                    // Actions à effectuer avec la date convertie
+                    employe.setdatedepart(date);
+                    AjoutNotif.EModif();
+                } catch (DateTimeParseException e) {
+                    // Gérer le cas où la chaîne de caractères ne peut pas être convertie en LocalDate
+                	AjoutNotif.Format();
+                }
+            }
+        });
+        EmployeEditPanel.add(ChangeDATED);
+        ChangeDATED.setBounds(550, 450, 190, 40);
+
+
+     
 
     	getContentPane().add(EmployeEditPanel);
         revalidate(); // Revalider le contenu du frame
@@ -1284,11 +1355,26 @@ public class PersonnelGUI extends JFrame {
 		return null;
 	}
 
+    private boolean verifiePassword(String password) {
+        Employe root = gestionPersonnel.getRoot();
+       // Vérifie si l'employé est le root (par exemple, vérifie son email)
+
+        if (root != null) {
+            boolean ok = root.getPassword().equals(password);
+            if (!ok) {
+                System.out.println("Password incorrect pour le root.");
+            }
+            return ok;
+        } else {
+            return false; // Si ce n'est pas le root, retourne false
+        }
+    }
+
 
 	
     public Employe verifierIdentifiants(String email, String motDePasse) {
         System.out.println("Début de la vérification des identifiants");
-
+  
         for (Ligue ligue : gestionPersonnel.getLigues()) {
             System.out.println("Vérification de la ligue : " + ligue.getNom());
             for (Employe employe : ligue.getEmployes()) {
