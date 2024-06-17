@@ -36,42 +36,44 @@ public class JDBC implements Passerelle
 	public GestionPersonnel getGestionPersonnel() throws SauvegardeImpossible {
 
 	    GestionPersonnel gestionPersonnel = new GestionPersonnel();
-	
-	    try {
-	    	String recupRoot = "SELECT * FROM employe WHERE root = 1 ";
-	    	Statement instructionRoot = connection.createStatement();
-	    	ResultSet resultRoot = instructionRoot.executeQuery(recupRoot);
-	    	
-	    	if (resultRoot.next()) { 
-	    	    String nom = resultRoot.getString("nom");
-	    	    String prenom = resultRoot.getString("prenom");
-	    	    String mail = resultRoot.getString("mail");
-	    	    String password = resultRoot.getString("password");
-	    	    LocalDate dateA = resultRoot.getDate("date_arrive").toLocalDate();
-	    	    LocalDate dateD = resultRoot.getDate("date_depart").toLocalDate();
-	    	    int id = resultRoot.getInt("ID_EMPLOYE");
 
-	    	    gestionPersonnel.addRoot(nom, prenom, mail, password, dateA, dateD,id);
-	    	}
-	    	
+	    try {
+	        // Récupération du root
+	        String recupRoot = "SELECT * FROM employe WHERE root = 1";
+	        Statement instructionRoot = connection.createStatement();
+	        ResultSet resultRoot = instructionRoot.executeQuery(recupRoot);
+
+	        if (resultRoot.next()) { 
+	            String nom = resultRoot.getString("nom");
+	            String prenom = resultRoot.getString("prenom");
+	            String mail = resultRoot.getString("mail");
+	            String password = resultRoot.getString("password");
+	            LocalDate dateA = resultRoot.getDate("date_arrive").toLocalDate();
+	            LocalDate dateD = resultRoot.getDate("date_depart").toLocalDate();
+	            int id = resultRoot.getInt("ID_EMPLOYE");
+
+	            gestionPersonnel.addRoot(nom, prenom, mail, password, dateA, dateD, id);
+	        }
+	        resultRoot.close();
+	        instructionRoot.close();
+
+	        // Récupération des ligues
 	        String requeteLigues = "SELECT * FROM ligue";
 	        Statement instructionLigues = connection.createStatement();
 	        ResultSet resultLigues = instructionLigues.executeQuery(requeteLigues);
 
-	       
 	        while (resultLigues.next()) {
 	            int idLigue = resultLigues.getInt("id_ligue");
 	            String nomLigue = resultLigues.getString("nom");
+	            System.out.println("Récupération de la ligue : " + nomLigue + " (ID: " + idLigue + ")");
+
 	            Ligue ligue = gestionPersonnel.addLigue(idLigue, nomLigue);
 
-	            
+	            // Récupération des employés pour la ligue
 	            String requeteEmployes = "SELECT * FROM employe WHERE ligue = " + idLigue;
 	            Statement instructionEmployes = connection.createStatement();
 	            ResultSet resultEmployes = instructionEmployes.executeQuery(requeteEmployes);
-                String requeteAdmin = "SELECT ADMIN_LIGUE FROM ligue WHERE id_ligue =" + idLigue;
-                Statement instructionAdmin = connection.createStatement();
-	            ResultSet resultAdmin = instructionAdmin.executeQuery(requeteAdmin);
-	            
+
 	            while (resultEmployes.next()) {
 	                String nomEmploye = resultEmployes.getString("nom");
 	                String prenomEmploye = resultEmployes.getString("prenom");
@@ -81,20 +83,33 @@ public class JDBC implements Passerelle
 	                LocalDate dateDepart = resultEmployes.getDate("date_depart").toLocalDate();
 	                int id = resultEmployes.getInt("ID_EMPLOYE");
 
-	                Employe employe = ligue.addEmploye(nomEmploye, prenomEmploye, mailEmploye, passwordEmploye, dateArrive, dateDepart,id);
+	                Employe employe = ligue.addEmploye(nomEmploye, prenomEmploye, mailEmploye, passwordEmploye, dateArrive, dateDepart, id);
+	                System.out.println("    Employé ajouté : " + nomEmploye + " " + prenomEmploye);
+	            }
+
+	            // Vérification de l'administrateur de la ligue
+	            String requeteAdmin = "SELECT ADMIN_LIGUE FROM ligue WHERE id_ligue =" + idLigue;
+	            Statement instructionAdmin = connection.createStatement();
+	            ResultSet resultAdmin = instructionAdmin.executeQuery(requeteAdmin);
+
+	            if (resultAdmin.next()) {
 	                int isAdmin = resultAdmin.getInt("ADMIN_LIGUE");
-	                if (id == isAdmin) {
+	                for (Employe employe : ligue.getEmployes()) {
+	                    if (employe.getId() == isAdmin) {
 	                        ligue.setAdministrateur(employe);
-	                   
+	                        System.out.println("    Administrateur de la ligue : " + employe.getNom() + " " + employe.getPrenom());
+	                        System.out.println("Test"+employe.getLigue().getAdministrateur());
+	                        break;
+	                    }
 	                }
 	            }
 
-	         
-	            
 	            resultEmployes.close();
 	            instructionEmployes.close();
+	            resultAdmin.close();
+	            instructionAdmin.close();
 	        }
-	       
+
 	        resultLigues.close();
 	        instructionLigues.close();
 	    } catch (SQLException e) {
@@ -102,6 +117,7 @@ public class JDBC implements Passerelle
 	    }
 	    return gestionPersonnel;
 	}
+
 
 
 

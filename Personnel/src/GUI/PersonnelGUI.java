@@ -229,7 +229,7 @@ public class PersonnelGUI extends JFrame {
          jLabel5 = new javax.swing.JLabel();
 
          setPreferredSize(new java.awt.Dimension(1000, 550));
-         setLayout(null);
+         compte.setLayout(null);
 
 
          Set<Ligue> liguesSet = gestionPersonnel.getLigues();
@@ -261,26 +261,26 @@ public class PersonnelGUI extends JFrame {
          jTable1.setVerifyInputWhenFocusTarget(false);
          jScrollPane1.setViewportView(jTable1);
 
-         add(jScrollPane1);
+         compte.add(jScrollPane1);
          jScrollPane1.setBounds(50, 150, 640, 340);
 
          jLabel1.setBackground(new java.awt.Color(56, 56, 56));
          jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
          jLabel1.setForeground(new java.awt.Color(202, 178, 92));
          jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-         jLabel1.setText("ADMIN DE LA LIGUE : "+ligue.getAdministrateur().getNom()+" "+ligue.getAdministrateur().getPrenom()+" "+ligue.getAdministrateur().getMail());
+         jLabel1.setText("ADMIN DE LA LIGUE :  nom: "+ligue.getAdministrateur().getNom()+"   prenom: "+ligue.getAdministrateur().getPrenom()+"   mail: "+ligue.getAdministrateur().getMail());
          jLabel1.setOpaque(true);
-         add(jLabel1);
+         compte.add(jLabel1);
          jLabel1.setBounds(0, 0, 860, 70);
 
          jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
          jLabel3.setText("MEMBRE DE MA LIGUE :");
-         add(jLabel3);
+         compte.add(jLabel3);
          jLabel3.setBounds(50, 90, 450, 50);
 
          jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
          jLabel4.setText("CHANGER SON MOT DE PASSE");
-         add(jLabel4);
+         compte.add(jLabel4);
          jLabel4.setBounds(710, 170, 280, 50);
 
          jButton3.setBackground(new java.awt.Color(56, 56, 56));
@@ -293,7 +293,7 @@ public class PersonnelGUI extends JFrame {
                 afficheRootPanel(employe);
              }
          });
-         add(jButton3);
+         compte.add(jButton3);
          jButton3.setBounds(853, 0, 150, 70);
 
          jButton1.setBackground(new java.awt.Color(202, 178, 92));
@@ -304,7 +304,7 @@ public class PersonnelGUI extends JFrame {
                 
              }
          });
-         add(jButton1);
+         compte.add(jButton1);
          jButton1.setBounds(720, 230, 250, 40);
 
          jButton2.setBackground(new java.awt.Color(202, 178, 92));
@@ -315,12 +315,12 @@ public class PersonnelGUI extends JFrame {
                  
              }
          });
-         add(jButton2);
+         compte.add(jButton2);
          jButton2.setBounds(720, 380, 250, 40);
 
          jLabel5.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
          jLabel5.setText("CHANGER SON ADRESSE MAIL");
-         add(jLabel5);
+         compte.add(jLabel5);
          jLabel5.setBounds(710, 320, 280, 50);
     
     	
@@ -396,6 +396,13 @@ public class PersonnelGUI extends JFrame {
 				employereditroot(employu); 
             }
         });
+        
+     
+		if(!employe.estRoot()) {
+        	gererRootButton.setEnabled(false);
+        }else if(employe.getLigue().getAdministrateur()!= employe){
+        	gererButton.setEnabled(false);
+        }
         
      
         rootPanel.add(gererRootButton);
