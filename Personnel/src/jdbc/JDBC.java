@@ -54,7 +54,6 @@ public class JDBC implements Passerelle
 	    	    gestionPersonnel.addRoot(nom, prenom, mail, password, dateA, dateD,id);
 	    	}
 	    	
-	    	
 	        String requeteLigues = "SELECT * FROM ligue";
 	        Statement instructionLigues = connection.createStatement();
 	        ResultSet resultLigues = instructionLigues.executeQuery(requeteLigues);
@@ -83,12 +82,10 @@ public class JDBC implements Passerelle
 	                int id = resultEmployes.getInt("ID_EMPLOYE");
 
 	                Employe employe = ligue.addEmploye(nomEmploye, prenomEmploye, mailEmploye, passwordEmploye, dateArrive, dateDepart,id);
-	                
-	                if (resultAdmin.next()) {
-	                    int isAdmin = resultAdmin.getInt("ADMIN_LIGUE");
-	                    if (id == isAdmin) {
+	                int isAdmin = resultAdmin.getInt("ADMIN_LIGUE");
+	                if (id == isAdmin) {
 	                        ligue.setAdministrateur(employe);
-	                    }
+	                   
 	                }
 	            }
 
@@ -181,14 +178,17 @@ public class JDBC implements Passerelle
 	            instruction.setDate(6, java.sql.Date.valueOf(employe.getdatearrive()));
 		        instruction.setDate(7, java.sql.Date.valueOf(employe.getdatedepart()));
 	        } else {
-	            instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-	            instruction.setString(1, employe.getNom());
-		        instruction.setString(2, employe.getPrenom());
-		        instruction.setString(3, employe.getMail());
-		        instruction.setString(4, employe.getPassword());
-		        instruction.setDate(5, java.sql.Date.valueOf(employe.getdatearrive()));
-		        instruction.setDate(6, java.sql.Date.valueOf(employe.getdatedepart()));
-
+	        	  if ("root".equals(employe.getNom())) {
+	        		  return -1;
+	              } else {
+	            	  instruction = connection.prepareStatement("INSERT INTO employe (nom, prenom, mail, password, date_arrive, date_depart) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+	                  instruction.setString(1, employe.getNom());
+	                  instruction.setString(2, employe.getPrenom());
+	                  instruction.setString(3, employe.getMail());
+	                  instruction.setString(4, employe.getPassword());
+	                  instruction.setDate(5, java.sql.Date.valueOf(employe.getdatearrive()));
+	                  instruction.setDate(6, java.sql.Date.valueOf(employe.getdatedepart()));
+	              }
 	        }
 
 	     
@@ -231,22 +231,23 @@ public class JDBC implements Passerelle
 
 	@Override
 	public int remove(Ligue ligue) throws SauvegardeImpossible {
-		try 
-		{
-			PreparedStatement instruction;
-			instruction = connection.prepareStatement("DELETE FROM ligue WHERE nom = ? AND id_ligue = ?");
-			instruction.setString(1, ligue.getNom());
-			instruction.setInt(2, ligue.getId());
-			instruction.executeUpdate();
-			
-			return ligue.getId();
-
-		} 
-		catch (SQLException exception) 
-		{
-			exception.printStackTrace();
-			throw new SauvegardeImpossible(exception);
-		}		
+	    try {
+	        PreparedStatement deleteEmployees;
+	        deleteEmployees = connection.prepareStatement("DELETE FROM employe WHERE ligue = ?");
+	        deleteEmployees.setInt(1, ligue.getId());
+	        deleteEmployees.executeUpdate();
+	        
+	        PreparedStatement deleteLeague;
+	        deleteLeague = connection.prepareStatement("DELETE FROM ligue WHERE nom = ? AND id_ligue = ?");
+	        deleteLeague.setString(1, ligue.getNom());
+	        deleteLeague.setInt(2, ligue.getId());
+	        deleteLeague.executeUpdate();
+	        
+	        return ligue.getId();
+	    } catch (SQLException exception) {
+	        exception.printStackTrace();
+	        throw new SauvegardeImpossible(exception);
+	    }       
 	}
 
 	@Override
@@ -254,8 +255,9 @@ public class JDBC implements Passerelle
 
 		try {
 			PreparedStatement instruction;
-			instruction = connection.prepareStatement("DELETE FROM employe WHERE nom = ?");
+			instruction = connection.prepareStatement("DELETE FROM employe WHERE nom = ? AND ID_EMPLOYE = ?");
 			instruction.setString(1, employe.getNom());
+			instruction.setInt(2, employe.getId());
 			instruction.executeUpdate();
 			return employe.getId();
 		} catch (SQLException exception) {
